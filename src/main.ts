@@ -1,20 +1,19 @@
-/*
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { CustomLoggerService } from './logger/custom-logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
-}
-bootstrap();
-*/
+  const logger = new CustomLoggerService();
 
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+  app.useLogger(logger); // Use custom logger
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  
-  await app.listen(3001); 
+  app.enableCors({
+    origin: 'http://localhost:3002',
+    credentials: true,
+  });
+
+  await app.listen(3001);
+  logger.log('Backend is running on http://localhost:3001');
 }
 bootstrap();
