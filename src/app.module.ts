@@ -1,3 +1,4 @@
+/*
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
@@ -20,6 +21,31 @@ import { Todo } from './todos/todo.entity';
     }),
     AuthModule,
     TodoModule,
+  ],
+})
+export class AppModule {}
+*/
+
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { TodoModule } from './todos/todos.module';
+
+
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',  // Use PostgreSQL as the database
+      host: 'localhost', // Database host
+      port: 5432,        // Default PostgreSQL port
+      username: 'postgres', // Your PostgreSQL username
+      password: 'new_password', // Your PostgreSQL password
+      database: 'postgres', // Database name to connect to
+      autoLoadEntities: true, // Automatically load entities
+      synchronize: true, // Synchronize the database schema with entities (only for development)
+    }),
+    AuthModule, // Import the AuthModule
+    TodoModule, // Import the TodoModule
   ],
 })
 export class AppModule {}

@@ -1,0 +1,22 @@
+### Register a new user
+POST http://localhost:3001/auth/register
+Content-Type: application/json
+
+{
+  "name": "Alice Smith",
+  "mobile": "9876543210",  // Ensure this mobile number is unique
+  "gender": "female",
+  "country": "Canada",
+  "hobbies": ["painting", "hiking"],
+  "email": "alice@example.com",  // Ensure this email is unique
+  "password": "mypassword456"  // Use a strong password
+}
+
+### Login a user
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "mobile": "9876543210",  // Use the same mobile number you registered with
+  "password": "mypassword456"  // Use the same password you registered with
+}

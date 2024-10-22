@@ -14,17 +14,30 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  // Register a new user
   async register(userDto: RegisterUserDto) {
+    const existingUser = await this.userRepository.findOne({ where: { mobile: userDto.mobile } });
+    if (existingUser) {
+      throw new BadRequestException('User already exists with this mobile number');
+    }
+
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
     const user = this.userRepository.create({ ...userDto, password: hashedPassword });
     return this.userRepository.save(user);
   }
 
+  // Login user and return JWT if valid
   async login(mobile: string, password: string) {
     const user = await this.userRepository.findOne({ where: { mobile } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
     const payload = { userId: user.id };
     return { accessToken: this.jwtService.sign(payload) };
   }
@@ -32,6 +45,7 @@ export class AuthService {
 */
 
 
+// auth.service.ts
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
