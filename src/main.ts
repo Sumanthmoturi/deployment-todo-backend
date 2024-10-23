@@ -13,7 +13,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(3001);
+  await app.listen(process.env.PORT || 3001);
   logger.log('Backend is running on http://localhost:3001');
 }
 bootstrap();

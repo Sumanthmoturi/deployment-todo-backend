@@ -1,27 +1,4 @@
-/*
-import { Injectable, ConsoleLogger } from '@nestjs/common';
-import { appendFile } from 'fs';
 
-@Injectable()
-export class CustomLoggerService extends ConsoleLogger {
-  logToFile(message: string) {
-    const logMessage = `${new Date().toISOString()} - ${message}\n`;
-    appendFile('logs/app.log', logMessage, (err) => {
-      if (err) console.error('Failed to write log:', err);
-    });
-  }
-
-  log(message: string) {
-    super.log(message); // Log to console
-    this.logToFile(message); // Log to file
-  }
-
-  error(message: string, trace: string) {
-    super.error(message, trace);
-    this.logToFile(`Error: ${message} - ${trace}`);
-  }
-}
-*/
 
 import { Injectable, ConsoleLogger } from '@nestjs/common';
 import { appendFile, existsSync, mkdirSync } from 'fs';

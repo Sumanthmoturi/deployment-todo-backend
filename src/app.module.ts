@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TodoModule } from './todos/todos.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 
 
 @Module({
@@ -25,7 +26,10 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true, // Synchronize the database schema with entities (only for development)
     }),
     AuthModule, // Import the AuthModule
-    TodoModule, // Import the TodoModule
+    TodoModule, 
+    UserModule, // Import the TodoModule
   ],
 })
 export class AppModule {}
+
+
