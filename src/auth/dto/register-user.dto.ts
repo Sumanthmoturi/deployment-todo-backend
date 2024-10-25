@@ -1,5 +1,4 @@
-/*
-import { IsNotEmpty, IsString, IsEmail, IsArray } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsArray, IsOptional } from 'class-validator';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -7,6 +6,7 @@ export class RegisterUserDto {
   name: string;
 
   @IsNotEmpty()
+  @IsString()
   mobile: string;
 
   @IsNotEmpty()
@@ -15,42 +15,14 @@ export class RegisterUserDto {
   @IsNotEmpty()
   country: string;
 
+  @IsOptional()
   @IsArray()
-  hobbies: string[];
+  hobbies: string[]; // Change to `hobbies: string[];` if you require hobbies to be present
 
-  @IsNotEmpty()
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsNotEmpty()
-  password: string;
-}
-
-*/
-
-
-// register-user.dto.ts
-import { IsString, IsEmail, IsMobilePhone, IsArray } from 'class-validator';
-
-export class RegisterUserDto {
-  @IsString()
-  name: string;
-
-  @IsMobilePhone() // Validates the mobile number format
-  mobile: string;
-
-  @IsString()
-  gender: string;
-
-  @IsString()
-  country: string;
-
-  @IsArray() // Ensures hobbies is an array
-  hobbies: string[];
-
-  @IsEmail() // Validates the email format
-  email: string;
-
-  @IsString()
   password: string;
 }

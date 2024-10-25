@@ -28,6 +28,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() body: any) {
+    console.log("Received Regsitaration Data:", body)
     return this.authService.register(body);
   }
 

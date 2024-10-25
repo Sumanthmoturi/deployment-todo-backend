@@ -6,25 +6,19 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   name: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   mobile: string;
 
-  @Column()
-  gender: string;
-
-  @Column()
-  country: string;
-
-  @Column('simple-array')
-  hobbies: string[];
-
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   email: string;
 
-  @Column()
+  @Column('simple-array', { default: '' })
+  hobbies: string[];
+
+  @Column({ nullable: false })
   password: string;
 
   @OneToMany(() => Todo, (todo) => todo.user)

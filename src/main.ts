@@ -5,7 +5,6 @@ import { CustomLoggerService } from './logger/custom-logger.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new CustomLoggerService();
-
   app.useLogger(logger); // Use custom logger
 
   app.enableCors({
