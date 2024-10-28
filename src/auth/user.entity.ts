@@ -15,9 +15,11 @@ export class User {
   @Column({ unique: true, nullable: false })  // Email must be unique
   email: string;
 
-  @Column('simple-array', { default: '' })  // Store hobbies as an array
-  hobbies: string[];
-
+ // @Column('simple-array', { default: '' })   // Store hobbies as an array
+ // hobbies: string[];
+ @Column('text', { array: true, default: () => 'ARRAY[]::text[]' })  // Store hobbies as an array
+ hobbies: string[];
+ 
   @Column({ nullable: false })  // Password is required
   password: string;
 

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,ManyToOne } from 'typeorm';
 import { User } from '../auth/user.entity';
 
 @Entity()
@@ -12,7 +12,7 @@ export class Todo {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 8, default: '00:00:00' }) // Format: HH:mm:ss
   time: string;
 
   @Column({ default: 'in-progress' })

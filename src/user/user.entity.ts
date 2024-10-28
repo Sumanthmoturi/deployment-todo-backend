@@ -6,19 +6,19 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false })  // Ensure name cannot be null
   name: string;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: false })  // Mobile must be unique
   mobile: string;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: false })  // Email must be unique
   email: string;
+  
+  @Column('text', { array: true, default: () => 'ARRAY[]::text[]' })  // Store hobbies as an array
+hobbies: string[];
 
-  @Column('simple-array', { default: '' })
-  hobbies: string[];
-
-  @Column({ nullable: false })
+  @Column({ nullable: false })  // Password is required
   password: string;
 
   @OneToMany(() => Todo, (todo) => todo.user)

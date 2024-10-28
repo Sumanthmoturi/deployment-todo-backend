@@ -8,8 +8,11 @@ export class CreateTodoDto {
   @IsNotEmpty()
   description: string;
 
+  //@IsNotEmpty()
+  //time: string;
   @IsNotEmpty()
-  time: string;
+  @IsString() 
+  time?: string;
 
   status: string;
 }

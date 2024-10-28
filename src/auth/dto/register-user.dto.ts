@@ -15,9 +15,8 @@ export class RegisterUserDto {
   @IsNotEmpty()
   country: string;
 
-  @IsOptional()
   @IsArray()
-  hobbies: string[]; // Change to `hobbies: string[];` if you require hobbies to be present
+  hobbies: string[];
 
   @IsEmail()
   @IsNotEmpty()
