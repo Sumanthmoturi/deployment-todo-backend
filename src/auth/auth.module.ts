@@ -8,13 +8,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]), // Register the User entity with TypeORM
-    ConfigModule, // Import ConfigModule to access environment variables
+    TypeOrmModule.forFeature([User]),                                // Register the User entity with TypeORM
+    ConfigModule,                                                    // Import ConfigModule to access environment variables
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'), // Get JWT secret from environment variable
-        signOptions: { expiresIn: '60s' }, // Adjust token expiration time as needed
+        secret: configService.get<string>('JWT_SECRET'),             // Get JWT secret from environment variable
+        signOptions: { expiresIn: '60s' },                           // Adjust token expiration time as needed
       }),
       inject: [ConfigService],
     }),

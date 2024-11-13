@@ -8,27 +8,28 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import {APP_GUARD} from '@nestjs/core';
 import { AppService } from './app.service';
 import { MyLoggerModule } from './my-logger/my-logger.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
-    // Loads environment variables from a .env file
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     
   
     TypeOrmModule.forRoot({
-      type: 'postgres',  // Use PostgreSQL as the database
-      host: 'localhost', // Database host
-      port: 5432,        // Default PostgreSQL port
-      username: 'postgres', // Your PostgreSQL username
-      password: 'new_password', // Your PostgreSQL password
+      type: 'postgres',  
+      host: 'localhost', 
+      port: 5432,        
+      username: 'postgres', 
+      password: 'new_password', 
       database: 'postgres', 
       url: process.env.DATABASE_URL,
-      autoLoadEntities: true, // Automatically load entities
-      synchronize: true, // Synchronize the database schema with entities (only for development)
+      autoLoadEntities: true, 
+      synchronize: true,
     }),
-    AuthModule, // Import the AuthModule
+    AuthModule, 
     TodoModule, 
     UserModule, 
     ThrottlerModule.forRoot([{
@@ -39,7 +40,10 @@ import { MyLoggerModule } from './my-logger/my-logger.module';
   name:'long',
       ttl:60000,
       limit:100,
-}]), MyLoggerModule
+}]), MyLoggerModule,
+ServeStaticModule.forRoot({
+  rootPath: join(__dirname, '..', 'public'),
+}),
 ],
 
 providers: [AppService, {

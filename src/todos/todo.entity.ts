@@ -12,8 +12,8 @@ export class Todo {
   @Column()
   description: string;
 
-  @Column({ type: 'varchar', length: 8, default: '00:00:00' }) // Format: HH:mm:ss
-  time: string;
+  @Column({type:"int", default:0})
+  time: number
 
   @Column({ default: 'in-progress' })
   status: string;

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 export class CreateTodoDto {
   @IsNotEmpty()
@@ -8,11 +8,10 @@ export class CreateTodoDto {
   @IsNotEmpty()
   description: string;
 
-  //@IsNotEmpty()
-  //time: string;
   @IsNotEmpty()
-  @IsString() 
-  time?: string;
-
+  @IsNumber()
+  time: number;
+   
+  @IsNotEmpty()
   status: string;
 }

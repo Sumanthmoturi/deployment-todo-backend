@@ -22,12 +22,11 @@ export class UserService {
       throw new ConflictException('Mobile or email already exists');
     }
 
-    // Ensure hobbies is always an array
     createUserDto.hobbies = Array.isArray(createUserDto.hobbies) 
       ? createUserDto.hobbies 
       : [createUserDto.hobbies];
 
-    // Create user and set ID manually to start from 0
+    
     const userCount = await this.userRepository.count();
     createUserDto.id = userCount;
 
@@ -35,24 +34,21 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  // Get all users
+
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  // Get a user by ID
+
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`User with ID ${id} not found`);
     return user;
   }
 
-  // Update a user by ID
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    // Check if user exists
     await this.findOne(id);
 
-    // Optionally check for unique fields
     if (updateUserDto.mobile || updateUserDto.email) {
       const existingUser = await this.userRepository.findOne({
         where: [{ mobile: updateUserDto.mobile }, { email: updateUserDto.email }],
@@ -63,12 +59,12 @@ export class UserService {
       }
     }
 
-    // Update user
+ 
     await this.userRepository.update(id, updateUserDto);
     return this.findOne(id);
   }
 
-  // Delete a user by ID
+
   async remove(id: number): Promise<void> {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
