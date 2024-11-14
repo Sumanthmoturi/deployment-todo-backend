@@ -8,7 +8,7 @@ export class MyLoggerService extends ConsoleLogger {
     private logDirectory = path.join(__dirname, '..', '..', 'logs'); // Log directory
     private logFile = path.join(this.logDirectory, 'myLogFile.log'); // Log file
 
-    // Ensure the log directory exists
+
     private async ensureLogDirectoryExists(): Promise<void> {
         try {
             if (!fs.existsSync(this.logDirectory)) {
@@ -20,7 +20,7 @@ export class MyLoggerService extends ConsoleLogger {
         }
     }
 
-    // Log to file
+   
     private async logToFile(entry: string): Promise<void> {
         const formattedEntry = `${new Date().toISOString()}\t${entry}\n`;
         await this.ensureLogDirectoryExists(); // Ensure log directory exists

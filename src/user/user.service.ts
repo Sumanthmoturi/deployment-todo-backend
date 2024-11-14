@@ -11,9 +11,8 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  // Create a new user
+  
   async create(createUserDto: CreateUserDto): Promise<User> {
-    // Check if mobile or email already exists
     const existingUser = await this.userRepository.findOne({
       where: [{ mobile: createUserDto.mobile }, { email: createUserDto.email }],
     });

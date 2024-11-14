@@ -9,26 +9,25 @@ export class CreateUserDto {
   name: string;
 
   @IsNotEmpty()
-  @IsString() // Added IsString for validation
+  @IsString() 
   mobile: string;
 
   @IsNotEmpty()
-  @IsString() // Added IsString for validation
+  @IsString() 
   gender: string;
 
   @IsNotEmpty()
-  @IsString() // Added IsString for validation
+  @IsString() 
   country: string;
 
   @IsArray()
-  @IsOptional() // Allow hobbies to be optional
-  hobbies: string[]; // Ensure this is always an array
-
+  @IsOptional() 
+  hobbies: string[];
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
   @IsNotEmpty()
-  @IsString() // Added IsString for validation
+  @IsString() 
   password: string;
 }
