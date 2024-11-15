@@ -2,21 +2,26 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './all-exception.filter';
 import { MyLoggerService } from './my-logger/my-logger.service';
+import { NestExpressApplication } from '@nestjs/platform-express';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs:true,
   })
-  const logger = app.get(MyLoggerService); // Get your logger service instance
+  const logger = app.get(MyLoggerService);
   app.useLogger(logger);
   const {httpAdapter} =app.get(HttpAdapterHost)
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
   app.enableCors({
-    origin: 'http://localhost:3002',
+    origin: 'https://todosapp-bay.vercel.app/',
     credentials: true,
-  });
 
-  await app.listen(process.env.PORT || 3001);
-  logger.log('Backend is running on http://localhost:3001');
+  });
+  
+  await app.init();
+  return app.getHttpServer();
+
+ 
 }
-bootstrap();
+bootstrap().then(() => console.log('NestJS app running in serverless mode.'));
