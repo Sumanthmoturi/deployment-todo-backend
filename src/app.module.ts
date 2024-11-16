@@ -20,14 +20,17 @@ import { join } from 'path';
   
     TypeOrmModule.forRoot({
       type: 'postgres',  
-      host: 'localhost', 
+      host: 'dpg-cssaaphu0jms73e89el0-a', 
       port: 5432,        
-      username: 'postgres', 
-      password: 'new_password', 
-      database: 'postgres', 
+      username: 'todos_app_db_1frl_user', 
+      password: 'LpuzpwJbu8XWDNHJndcemzW14K7mekBx', 
+      database: 'todos_app_db_1frl',  
       url: process.env.DATABASE_URL,
       autoLoadEntities: true, 
       synchronize: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     AuthModule, 
     TodoModule, 
