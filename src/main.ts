@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
   app.enableCors({
-    origin:  'https://vercel.com/msks-projects-c94f807c/todos.app',
+    origin:  'https://todosapp-kappa-nine.vercel.app/',
     credentials: true,
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
