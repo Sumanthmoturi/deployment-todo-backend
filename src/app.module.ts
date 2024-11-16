@@ -8,8 +8,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import {APP_GUARD} from '@nestjs/core';
 import { AppService } from './app.service';
 import { MyLoggerModule } from './my-logger/my-logger.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+
 
 @Module({
   imports: [
@@ -44,9 +43,6 @@ import { join } from 'path';
       ttl:60000,
       limit:100,
 }]), MyLoggerModule,
-ServeStaticModule.forRoot({
-  rootPath: join(__dirname, '..', 'public'),
-}),
 ],
 
 providers: [AppService, {
