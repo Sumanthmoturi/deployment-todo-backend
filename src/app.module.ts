@@ -27,9 +27,7 @@ import { MyLoggerModule } from './my-logger/my-logger.module';
       url: process.env.DATABASE_URL,
       autoLoadEntities: true, 
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
     AuthModule, 
     TodoModule, 

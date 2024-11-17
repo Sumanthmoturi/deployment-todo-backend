@@ -12,13 +12,15 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
   app.enableCors({
-    origin:  'https://todosapp-kappa-nine.vercel.app/',
+    origin: process.env.FRONTEND_URL ||  'https://todosapp-kappa-nine.vercel.app/',
     credentials: true,
     methods:'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders:['Content-Type', 'Authorization'],
   });
 
-  await app.listen(process.env.PORT || 3001);
-  logger.log('Backend is running on https://deployment-todo-backend.onrender.com');
+  const port = process.env.PORT || 3001;
+  await app.listen(port);
+  
+  logger.log(`Backend is running on http://localhost:${port} or on Render at https://your-deployment-url.onrender.com`);
 }
 bootstrap();
