@@ -7,10 +7,17 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() body: any) {
-    console.log("Received Registration Data:", body);
-    // Call the register method and return the result
-    return this.authService.register(body);
+  async register(@Body() body: any, @Res() res: Response) {
+    try {
+      console.log("Received Registration Data:", body);
+      const result = await this.authService.register(body);  // Handle registration logic
+
+  
+      return res.status(HttpStatus.CREATED).json({ message: 'User registered successfully' });
+    } catch (error) {
+      console.error('Registration failed:', error);
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Registration failed', error: error.message });
+    }
   }
 
   @Post('login')
