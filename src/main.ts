@@ -12,7 +12,7 @@ async function bootstrap() {
   const {httpAdapter} =app.get(HttpAdapterHost)
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
-  app.use(CorsMiddleware);
+  app.use(new CorsMiddleware());
 
   const port = process.env.PORT || 10000;
   await app.listen(port);
