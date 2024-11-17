@@ -14,8 +14,8 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.FRONTEND_URL ||  'https://todosapp-kappa-nine.vercel.app/',
     credentials: true,
-    methods:'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization',
+    methods: 'GET,POST,PUT,DELETE,PATCH',
+    allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
   });
 
   const port = process.env.PORT || 10000;
