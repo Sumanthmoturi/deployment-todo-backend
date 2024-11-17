@@ -2,7 +2,6 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './all-exception.filter';
 import { MyLoggerService } from './my-logger/my-logger.service';
-import { CorsMiddleware } from './cors/cors.middleware';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs:true,
@@ -12,7 +11,12 @@ async function bootstrap() {
   const {httpAdapter} =app.get(HttpAdapterHost)
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
-  app.use(new CorsMiddleware());
+  app.enableCors({
+    origin: process.env.FRONTEND_URL ||  'https://todosapp-kappa-nine.vercel.app/',
+    credentials: true,
+    methods:'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    allowedHeaders:['Content-Type', 'Authorization'],
+  });
 
   const port = process.env.PORT || 10000;
   await app.listen(port);
