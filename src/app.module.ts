@@ -28,6 +28,11 @@ import { AppController } from './app.controller';
       url: process.env.DATABASE_URL,
       autoLoadEntities: true, 
       synchronize: true,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false, // Adjust this based on your security requirements
+        },
+      }
     }),
     AuthModule, 
     TodoModule, 
