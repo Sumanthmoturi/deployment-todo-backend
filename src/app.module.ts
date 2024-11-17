@@ -8,6 +8,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import {APP_GUARD} from '@nestjs/core';
 import { AppService } from './app.service';
 import { MyLoggerModule } from './my-logger/my-logger.module';
+import { AppController } from './app.controller';
 
 
 @Module({
@@ -27,7 +28,6 @@ import { MyLoggerModule } from './my-logger/my-logger.module';
       url: process.env.DATABASE_URL,
       autoLoadEntities: true, 
       synchronize: true,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
     AuthModule, 
     TodoModule, 
@@ -42,6 +42,7 @@ import { MyLoggerModule } from './my-logger/my-logger.module';
       limit:100,
 }]), MyLoggerModule,
 ],
+controllers:[AppController],
 
 providers: [AppService, {
   provide:APP_GUARD,

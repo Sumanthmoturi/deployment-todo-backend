@@ -18,7 +18,7 @@ async function bootstrap() {
     allowedHeaders:['Content-Type', 'Authorization'],
   });
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 10000;
   await app.listen(port);
   
   logger.log(`Backend is running on http://localhost:${port} or on Render at https://your-deployment-url.onrender.com`);
