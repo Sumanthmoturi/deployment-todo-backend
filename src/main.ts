@@ -2,7 +2,7 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './all-exception.filter';
 import { MyLoggerService } from './my-logger/my-logger.service';
-import * as cors from 'cors'; 
+import { Request, Response } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs:true,
@@ -12,12 +12,19 @@ async function bootstrap() {
   const {httpAdapter} =app.get(HttpAdapterHost)
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
-  app.use(cors({
-    origin: 'https://todosapp-kappa-nine.vercel.app/',
-    credentials: true,
-    methods:'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-    allowedHeaders:['Content-Type', 'Authorization'],
-  }));
+  app.use((req: Request, res: Response, next) => {
+    const origin = req.get('origin'); // Using req.get() to access the 'origin' header
+    console.log('Incoming request from origin:', origin); // Log the origin
+    next();
+  });
+
+  app.enableCors({
+    origin: 'https://todosapp-kappa-nine.vercel.app',
+    credentials: true, 
+    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
 
   const port = process.env.PORT || 10000;
   await app.listen(port);
