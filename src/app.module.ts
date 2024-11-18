@@ -30,7 +30,7 @@ import { AppController } from './app.controller';
       synchronize: true,
       extra: {
         ssl: {
-          rejectUnauthorized: false, // Adjust this based on your security requirements
+          rejectUnauthorized: false, 
         },
       }
     }),
