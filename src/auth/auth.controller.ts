@@ -11,8 +11,7 @@ export class AuthController {
     try {
       console.log("Received Registration Data:", body);
       const result = await this.authService.register(body);  // Handle registration logic
-
-  
+      
       return res.status(HttpStatus.CREATED).json({ message: 'User registered successfully' });
     } catch (error) {
       console.error('Registration failed:', error);
@@ -22,19 +21,26 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() body: { mobile: string; password: string }, @Res() res: Response) {
-    
-    const result = await this.authService.login(body.mobile, body.password);
+    try {
+      // Authenticate user with mobile and password
+      const result = await this.authService.login(body.mobile, body.password);
+      
+      if (!result || !result.accessToken) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Invalid credentials' });
+      }
+      
+      // Set the token in cookies
+      res.cookie('token', result.accessToken, {
+        httpOnly: true,  // Ensure JavaScript can't access this cookie
+        secure: process.env.NODE_ENV === 'production', // Only set secure cookies over HTTPS
+        sameSite: 'none', // Allow cookies to be sent in cross-origin requests
+        maxAge: 3600000, // 1 hour expiry time
+      });
 
-    
-    res.cookie('token', result.accessToken, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', // Only set secure cookies over HTTPS
-      sameSite: 'none',
-      maxAge: 3600000, 
-    });
-    
-
-  
-    return res.status(HttpStatus.OK).json({ message: 'Login successful' });
+      return res.status(HttpStatus.OK).json({ message: 'Login successful' });
+    } catch (error) {
+      console.error('Login failed:', error);
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Login failed', error: error.message });
+    }
   }
 }
