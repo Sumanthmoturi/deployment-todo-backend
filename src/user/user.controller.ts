@@ -5,7 +5,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
 
-@SkipThrottle()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
