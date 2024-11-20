@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name); // Logger instance
+  private readonly logger = new Logger(AuthService.name); 
 
   constructor(
     private jwtService: JwtService,
@@ -33,7 +33,7 @@ export class AuthService {
 
 
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
-    const user = this.userRepository.create({ ...userDto, password: hashedPassword });
+    const user = this.userRepository.create({ ...userDto,email, password: hashedPassword });
 
     await this.userRepository.save(user);
     this.logger.log(`User registered with mobile: ${mobile}`);
