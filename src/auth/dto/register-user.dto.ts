@@ -18,7 +18,7 @@ export class RegisterUserDto {
   @IsArray()
   hobbies: string[];
 
-  @IsEmail({}, {message:"invalid email address format"})
+  @IsEmail({})
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
     message: 'Invalid email format',
   })

@@ -58,7 +58,7 @@ export class AuthService {
 
    
     const payload = { userId: user.id };
-    const accessToken = this.jwtService.sign(payload); // Sign the payload to generate token
+    const accessToken = this.jwtService.sign(payload);
 
     this.logger.log(`User logged in successfully with mobile: ${mobile}`);
     

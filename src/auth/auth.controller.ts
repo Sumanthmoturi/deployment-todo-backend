@@ -2,7 +2,7 @@ import { Controller, Post, Body, Res, HttpStatus, ConflictException } from '@nes
 import { AuthService } from './auth.service';
 import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
-
+import { LoginDto } from './dto/login.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -27,7 +27,7 @@ export class AuthController {
   
   @Post('login')
   async login(
-    @Body() body: { mobile: string; password: string },
+    @Body() body: LoginDto,
     @Res() res: Response,
   ) {
     try {
