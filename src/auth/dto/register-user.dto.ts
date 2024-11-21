@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsArray, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsArray, Matches, Length } from 'class-validator';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -25,5 +25,7 @@ export class RegisterUserDto {
   email: string;
 
   @IsNotEmpty()
+  @IsString() 
+  @Length(5, 20, { message: 'Password should be between 5 and 20 characters' })
   password: string;
 }
