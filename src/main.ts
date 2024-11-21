@@ -19,7 +19,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com/',
+    origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com',
     credentials: true, 
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
