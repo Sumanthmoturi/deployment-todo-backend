@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './all-exception.filter';
 import { MyLoggerService } from './my-logger/my-logger.service';
 import { Request, Response } from 'express';
+import { ValidationPipe } from '@nestjs/common'; 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs:true,
@@ -17,6 +19,14 @@ async function bootstrap() {
     console.log('Incoming request from origin:', origin);
     next();
   });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   app.enableCors({
     origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com',
