@@ -51,9 +51,7 @@ export class AuthController {
           return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Incorrect password' });
         }
       }
-      if (error instanceof UnprocessableEntityException) {
-        return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
-      }
+
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred during login', error: error.message });
     }
   }
