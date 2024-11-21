@@ -9,12 +9,12 @@ export class CreateUserDto {
   name: string;
 
   @IsNotEmpty()
-  @IsString() 
+  @IsString()
+  @Matches(/^[0-9]{10}$/, { message: 'Mobile number should be exactly 10 digits and only numbers' }) 
   mobile: string;
 
   @IsNotEmpty()
   @IsString() 
-  @Matches(/^[0-9]{10}$/, { message: 'Mobile number should be exactly 10 digits and only numbers' })
   gender: string;
 
   @IsNotEmpty()
