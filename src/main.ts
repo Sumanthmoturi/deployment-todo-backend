@@ -13,8 +13,8 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
   app.use((req: Request, res: Response, next) => {
-    const origin = req.get('origin'); // Using req.get() to access the 'origin' header
-    console.log('Incoming request from origin:', origin); // Log the origin
+    const origin = req.get('origin');
+    console.log('Incoming request from origin:', origin);
     next();
   });
 

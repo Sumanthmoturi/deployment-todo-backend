@@ -13,6 +13,7 @@ export class UserService {
 
   
   async create(createUserDto: CreateUserDto): Promise<User> {
+    
     const existingUser = await this.userRepository.findOne({
       where: [{ mobile: createUserDto.mobile }, { email: createUserDto.email }],
     });

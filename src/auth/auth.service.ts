@@ -15,6 +15,11 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  private validateMobile(mobile: string): boolean {
+    const mobileRegex = /^[0-9]{10}$/;
+    return mobileRegex.test(mobile);
+  }
+  
 
   async register(userDto: RegisterUserDto) {
     const { email, mobile } = userDto;
@@ -31,6 +36,10 @@ export class AuthService {
       throw new ConflictException('Mobile already exists');
     }
 
+    if (!this.validateMobile(mobile)) {
+      this.logger.warn(`Invalid mobile format: ${mobile}`);
+      throw new BadRequestException('Mobile number must be exactly 10 digits');
+    }
 
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
     const user = this.userRepository.create({ ...userDto,email, password: hashedPassword });
