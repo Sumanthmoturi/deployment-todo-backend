@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsArray, IsOptional } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsArray, Matches } from 'class-validator';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -6,7 +6,7 @@ export class RegisterUserDto {
   name: string;
 
   @IsNotEmpty()
-  @IsString()
+  @Matches(/^[0-9]{10}$/, { message: 'Mobile must be 10 digits' })
   mobile: string;
 
   @IsNotEmpty()
@@ -18,7 +18,7 @@ export class RegisterUserDto {
   @IsArray()
   hobbies: string[];
 
-  @IsEmail()
+  @IsEmail({}, {message:"invalid email address format"})
   @IsNotEmpty()
   email: string;
 

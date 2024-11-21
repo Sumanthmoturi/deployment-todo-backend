@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, ConflictException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response } from 'express';  // Import the Response type
+import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('auth')
@@ -17,13 +17,14 @@ export class AuthController {
         .status(HttpStatus.CREATED)
         .json({ message: 'User registered successfully', user: result });
     } catch (error) {
-      console.error('Registration failed:', error);
-      return res
-        .status(HttpStatus.BAD_REQUEST)
-        .json({ message: 'Registration failed', error: error.message });
+      console.error('Registration error:', error);
+      if (error instanceof ConflictException) {
+        return res.status(HttpStatus.CONFLICT).json({ message: error.message });
+      }
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Registration failed', error: error.message });
     }
   }
-
+  
   @Post('login')
   async login(
     @Body() body: { mobile: string; password: string },
@@ -36,7 +37,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
-        maxAge: 3600000, // 1 hour
+        maxAge: 3600000,
       });
 
       return res.status(HttpStatus.OK).json({ message: 'Login successful' });
