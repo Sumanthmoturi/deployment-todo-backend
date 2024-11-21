@@ -8,6 +8,6 @@ export class LoginDto {
 
   @IsNotEmpty()
   @IsString()
-  @Length(6, 20, { message: 'Password must be between 6 and 20 characters' })  // Adjust length as per your requirements
+  @Length(5, 20, { message: 'Password must be between 6 and 20 characters' })  // Adjust length as per your requirements
   password: string;
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus, ConflictException, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, ConflictException, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -44,7 +44,15 @@ export class AuthController {
     } catch (error) {
       console.error('Login failed:', error);
       if (error instanceof BadRequestException) {
-        return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Invalid credentials', error: error.message });
+        if (error.message === 'Incorrect mobile number') {
+          return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Incorrect mobile number' });
+        }
+        if (error.message === 'Incorrect password') {
+          return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Incorrect password' });
+        }
+      }
+      if (error instanceof UnprocessableEntityException) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
       }
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred during login', error: error.message });
     }
