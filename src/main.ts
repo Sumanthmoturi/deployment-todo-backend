@@ -29,6 +29,6 @@ async function bootstrap() {
   const port = process.env.PORT || 10000;
   await app.listen(port);
   
-  logger.log(`Backend is running on http://localhost:${port} or on Render at https://your-deployment-url.onrender.com`);
+  logger.log(`Backend is running on http://localhost:${port} or on Render at https://deployment-todo-backend.onrender.com`);
 }
 bootstrap();
