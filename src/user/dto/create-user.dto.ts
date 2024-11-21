@@ -21,6 +21,12 @@ export class CreateUserDto {
   @IsString() 
   country: string;
 
+
+  @IsOptional()
+  @IsString()
+  otherCountry?: string;
+
+
   @IsArray()
   @IsOptional() 
   hobbies: string[];

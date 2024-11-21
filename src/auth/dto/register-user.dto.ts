@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsArray, Matches, Length } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsArray, Matches, Length, IsOptional } from 'class-validator';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -14,6 +14,10 @@ export class RegisterUserDto {
 
   @IsNotEmpty()
   country: string;
+
+  @IsOptional()
+  @IsString()
+  otherCountry?: string;
 
   @IsArray()
   hobbies: string[];
