@@ -6,7 +6,6 @@ import { User } from './user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { MyLoggerService } from '../my-logger/my-logger.service';
-import { validate } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -20,43 +19,31 @@ export class AuthService {
     try {
       const { email, mobile } = userDto;
 
-  
-      const mobileRegex = /^[0-9]{10}$/;
-      if (!mobileRegex.test(mobile)) {
-        this.myLoggerService.error(`Invalid mobile format: ${mobile}`, 'AuthService');
-        throw new BadRequestException('Mobile number must be exactly 10 digits');
-      }
-
      
-      const errors = await validate(userDto);
-      if (errors.length > 0) {
-        const errorMessages = errors.map(error => {
-          return `${error.property}: ${Object.values(error.constraints).join(', ')}`;
-        }).join(' | ');
+      const existingUser = await this.userRepository.findOne({
+        where: [{ email }, { mobile }],
+      });
 
-        this.myLoggerService.error(`Validation failed: ${errorMessages}`, 'AuthService');
-        throw new BadRequestException(`Validation failed: ${errorMessages}`);
+      if (existingUser) {
+        if (existingUser.email === email) {
+          this.myLoggerService.error(`Email already exists: ${email}`, 'AuthService');
+          throw new ConflictException('Email already exists');
+        }
+
+        if (existingUser.mobile === mobile) {
+          this.myLoggerService.error(`Mobile already exists: ${mobile}`, 'AuthService');
+          throw new ConflictException('Mobile already exists');
+        }
       }
 
-
-      const emailExists = await this.userRepository.findOne({ where: { email } });
-      if (emailExists) {
-        this.myLoggerService.error(`Email already exists: ${email}`, 'AuthService');
-        throw new ConflictException('Email already exists');
-      }
-
-      const mobileExists = await this.userRepository.findOne({ where: { mobile } });
-      if (mobileExists) {
-        this.myLoggerService.error(`Mobile already exists: ${mobile}`, 'AuthService');
-        throw new ConflictException('Mobile already exists');
-      }
-
-      const hashedPassword = await bcrypt.hash(userDto.password, 10);
+      const hashedPassword = await bcrypt.hash(userDto.password);
       const user = this.userRepository.create({
         ...userDto,
         password: hashedPassword,
       });
+
       await this.userRepository.save(user);
+
       this.myLoggerService.log(`User successfully registered with mobile: ${mobile}`, 'AuthService');
       return user;
     } catch (error) {
@@ -64,6 +51,7 @@ export class AuthService {
       throw error;
     }
   }
+
 
   async login(mobile: string, password: string) {
     try {
