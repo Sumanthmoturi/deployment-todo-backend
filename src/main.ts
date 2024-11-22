@@ -25,14 +25,16 @@ app.use((req: Request, _: any, next: NextFunction) => {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-    }));
+    })
+);
 
   app.enableCors({
     origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com',
-    credentials: true,
+    credentials: true, 
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
+
 
   const port = process.env.PORT || 10000;
   await app.listen(port);
