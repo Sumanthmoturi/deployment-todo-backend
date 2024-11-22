@@ -15,20 +15,11 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  private validateMobile(mobile: string): boolean {
-    const mobileRegex = /^[0-9]{10}$/;
-    return mobileRegex.test(mobile);
-  }
-  
 
   async register(userDto: RegisterUserDto) {
     try {
       const { email, mobile } = userDto;
   
-      if (!this.validateMobile(mobile)) {
-        this.logger.warn(`Invalid mobile format: ${mobile}`);
-        throw new BadRequestException('Mobile number must be exactly 10 digits');
-      }
   
       const emailExists = await this.userRepository.findOne({ where: { email } });
       if (emailExists) {
