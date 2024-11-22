@@ -17,30 +17,46 @@ export class AuthService {
 
   async register(userDto: RegisterUserDto) {
     try {
-      const { email, mobile } = userDto;
+      const { email, mobile, password } = userDto;
 
-     
+      // Ensure that email, mobile, and password are provided
+      if (!email || !mobile || !password) {
+        throw new BadRequestException('Email, mobile, and password are required');
+      }
+
+      // Check for existing user by email or mobile
       const existingUser = await this.userRepository.findOne({
         where: [{ email }, { mobile }],
       });
 
       if (existingUser) {
         if (existingUser.email === email) {
-          const errorMessage=`Email already exists: ${email}`;
+          const errorMessage = `Email already exists: ${email}`;
           console.error(errorMessage);
-          this.myLoggerService.error(`Email already exists: ${email}`, 'AuthService');
+          this.myLoggerService.error(errorMessage, 'AuthService');
           throw new ConflictException('Email already exists');
         }
 
         if (existingUser.mobile === mobile) {
           const errorMessage = `Mobile already exists: ${mobile}`;
           console.error(errorMessage);
-          this.myLoggerService.error(`Mobile already exists: ${mobile}`, 'AuthService');
+          this.myLoggerService.error(errorMessage, 'AuthService');
           throw new ConflictException('Mobile already exists');
         }
       }
 
-      const hashedPassword = await bcrypt.hash(userDto.password);
+      // Hash password with salt rounds (default to 10 rounds)
+      let hashedPassword: string;
+      try {
+        hashedPassword = await bcrypt.hash(password, 10); 
+      } catch (error) {
+        const errorMessage = `Error hashing password for ${email || mobile}`;
+        console.error(errorMessage);
+        this.myLoggerService.error(errorMessage, error.stack);
+        throw new BadRequestException('Error hashing password');
+      }
+
+      // Create the new user and save to database
       const user = this.userRepository.create({
         ...userDto,
         password: hashedPassword,
@@ -48,7 +64,8 @@ export class AuthService {
 
       await this.userRepository.save(user);
 
-      this.myLoggerService.log(`User successfully registered with mobile: ${mobile}`, 'AuthService');
+      const successMessage = `User successfully registered with mobile: ${mobile}`;
+      this.myLoggerService.log(successMessage, 'AuthService');
       return user;
     } catch (error) {
       this.myLoggerService.error('Error during registration', error.stack);
@@ -56,33 +73,37 @@ export class AuthService {
     }
   }
 
-
   async login(mobile: string, password: string) {
     try {
+      // Check if the user exists by mobile number
       const user = await this.userRepository.findOne({ where: { mobile } });
 
       if (!user) {
         const errorMessage = `Incorrect mobile number: ${mobile}`;
         console.error(errorMessage);
-        this.myLoggerService.error(`Incorrect mobile number: ${mobile}`, 'AuthService');
+        this.myLoggerService.error(errorMessage, 'AuthService');
         throw new BadRequestException('Incorrect mobile number');
       }
 
+      // Check if the password matches
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
         const errorMessage = `Incorrect password for mobile: ${mobile}`;
         console.error(errorMessage);
-        this.myLoggerService.error(`Incorrect password attempt for mobile: ${mobile}`, 'AuthService');
+        this.myLoggerService.error(errorMessage, 'AuthService');
         throw new BadRequestException('Incorrect password');
       }
 
+      // Generate JWT token if credentials are valid
       const payload = { userId: user.id };
       const accessToken = this.jwtService.sign(payload);
-      this.myLoggerService.log(`User logged in successfully with mobile: ${mobile}`, 'AuthService');
+
+      const successMessage = `User logged in successfully with mobile: ${mobile}`;
+      this.myLoggerService.log(successMessage, 'AuthService');
       return { accessToken };
     } catch (error) {
-      console.error('Login Error:',error.message);
-      this.myLoggerService.error("Login failed", error.stack);
+      console.error('Login Error:', error.message);
+      this.myLoggerService.error('Login failed', error.stack);
       throw error;
     }
   }
