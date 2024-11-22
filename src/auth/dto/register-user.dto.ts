@@ -31,8 +31,8 @@ export class RegisterUserDto {
   @IsNotEmpty()
   @IsString() 
   @Length(5, 20, { message: 'Password should be between 5 and 20 characters' })
-  @Matches(/[A-Za-z0-9!@#$%^&*(),.?":{}|<>]/, {
-    message: 'Password must contain at least one special character and one number',
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{5,20}$/, {
+    message: 'Password must be between 5 and 20 characters, contain at least one letter, one number, and one special character',
   })
     password: string;
 }

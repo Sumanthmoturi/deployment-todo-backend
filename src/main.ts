@@ -25,8 +25,7 @@ app.use((req: Request, _: any, next: NextFunction) => {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-    }),
-  );
+    }));
 
   app.enableCors({
     origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com',
