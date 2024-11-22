@@ -5,8 +5,8 @@ import * as path from 'path';
 
 @Injectable()
 export class MyLoggerService extends ConsoleLogger {
-    private logDirectory = path.join(__dirname, '..', '..', 'logs'); // Log directory
-    private logFile = path.join(this.logDirectory, 'myLogFile.log'); // Log file
+    private logDirectory = path.join(__dirname, '..', '..', 'logs');
+    private logFile = path.join(this.logDirectory, 'myLogFile.log'); 
 
 
     private async ensureLogDirectoryExists(): Promise<void> {
@@ -23,7 +23,7 @@ export class MyLoggerService extends ConsoleLogger {
    
     private async logToFile(entry: string): Promise<void> {
         const formattedEntry = `${new Date().toISOString()}\t${entry}\n`;
-        await this.ensureLogDirectoryExists(); // Ensure log directory exists
+        await this.ensureLogDirectoryExists(); 
 
         try {
             await fspromises.appendFile(this.logFile, formattedEntry);
@@ -40,8 +40,8 @@ export class MyLoggerService extends ConsoleLogger {
 
     async error(message: any, trace?: string): Promise<void> {
         const entry = `Error: ${message} - Trace: ${trace || 'N/A'}`;
-        await this.logToFile(entry); // Await logging to file
-        super.error(message, trace); // Log error to console
+        await this.logToFile(entry); 
+        super.error(message, trace);
     }
 
     async warn(message: any, context?: string): Promise<void> {

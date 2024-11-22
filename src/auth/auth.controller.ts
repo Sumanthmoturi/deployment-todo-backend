@@ -3,25 +3,28 @@ import { AuthService } from './auth.service';
 import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
+import { MyLoggerService } from '../my-logger/my-logger.service'; 
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+  private readonly myLoggerService:MyLoggerService) {}
 
   @Post('register')
   async register(@Body() body: RegisterUserDto, @Res() res: Response) {
     try {
-      console.log("Received Registration Data:", body);
+      await this.myLoggerService.log('Registration data received', 'AuthController');
       const result = await this.authService.register(body);
+       await this.myLoggerService.log(`User registered successfully with mobile: ${body.mobile}`, 'AuthController');
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'User registered successfully', user: result });
     } catch (error) {
-      console.error('Registration error:', error);
-      if (error instanceof ConflictException) {
-        return res.status(HttpStatus.CONFLICT).json({ message: error.message });
-      }
-      return res.status(HttpStatus.BAD_REQUEST).json({ message: 'Registration failed', error: error.message });
+      await this.myLoggerService.error('Registration failed', error.stack);
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Registration failed',
+        error: error.message,
+      });
     }
   }
   
@@ -32,7 +35,7 @@ export class AuthController {
   ) {
     try {
       const result = await this.authService.login(body.mobile, body.password);
-
+      await this.myLoggerService.log(`User logged in successfully with mobile: ${body.mobile}`, 'AuthController');
       res.cookie('token', result.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -42,17 +45,11 @@ export class AuthController {
 
       return res.status(HttpStatus.OK).json({ message: 'Login successful' });
     } catch (error) {
-      console.error('Login failed:', error);
-      if (error instanceof BadRequestException) {
-        if (error.message === 'Incorrect mobile number') {
-          return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Incorrect mobile number' });
-        }
-        if (error.message === 'Incorrect password') {
-          return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Incorrect password' });
-        }
-      }
-
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred during login', error: error.message });
+      await this.myLoggerService.error('Login failed', error.stack);
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'Login failed',
+        error: error.message,
+      });
     }
   }
 }
