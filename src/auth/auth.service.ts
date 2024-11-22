@@ -26,11 +26,15 @@ export class AuthService {
 
       if (existingUser) {
         if (existingUser.email === email) {
+          const errorMessage=`Email already exists: ${email}`;
+          console.error(errorMessage);
           this.myLoggerService.error(`Email already exists: ${email}`, 'AuthService');
           throw new ConflictException('Email already exists');
         }
 
         if (existingUser.mobile === mobile) {
+          const errorMessage = `Mobile already exists: ${mobile}`;
+          console.error(errorMessage);
           this.myLoggerService.error(`Mobile already exists: ${mobile}`, 'AuthService');
           throw new ConflictException('Mobile already exists');
         }
@@ -58,12 +62,16 @@ export class AuthService {
       const user = await this.userRepository.findOne({ where: { mobile } });
 
       if (!user) {
+        const errorMessage = `Incorrect mobile number: ${mobile}`;
+        console.error(errorMessage);
         this.myLoggerService.error(`Incorrect mobile number: ${mobile}`, 'AuthService');
         throw new BadRequestException('Incorrect mobile number');
       }
 
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
+        const errorMessage = `Incorrect password for mobile: ${mobile}`;
+        console.error(errorMessage);
         this.myLoggerService.error(`Incorrect password attempt for mobile: ${mobile}`, 'AuthService');
         throw new BadRequestException('Incorrect password');
       }
@@ -71,9 +79,9 @@ export class AuthService {
       const payload = { userId: user.id };
       const accessToken = this.jwtService.sign(payload);
       this.myLoggerService.log(`User logged in successfully with mobile: ${mobile}`, 'AuthService');
-      
       return { accessToken };
     } catch (error) {
+      console.error('Login Error:', error.message);
       this.myLoggerService.error("Login failed", error.stack);
       throw error;
     }
