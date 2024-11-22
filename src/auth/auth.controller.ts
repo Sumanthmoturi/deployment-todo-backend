@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -12,7 +13,6 @@ export class AuthController {
     try {
       console.log("Received Registration Data:", body);
       const result = await this.authService.register(body);
-
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'User registered successfully', user: result });
