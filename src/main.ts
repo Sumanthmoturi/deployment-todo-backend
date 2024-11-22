@@ -2,7 +2,7 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './all-exception.filter';
 import { MyLoggerService } from './my-logger/my-logger.service';
-import { Request, Response } from 'express';
+import { NextFunction, Request} from 'express';
 import { ValidationPipe } from '@nestjs/common'; 
 
 async function bootstrap() {
@@ -14,12 +14,12 @@ async function bootstrap() {
   const {httpAdapter} =app.get(HttpAdapterHost)
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter))
   
-  app.use((req: Request, res: Response, next) => {
-    const origin = req.get('origin');
-    console.log('Incoming request from origin:', origin);
-    next();
-  });
-
+  
+app.use((req: Request, _: any, next: NextFunction) => {
+  const origin = req.get('origin');
+  console.log('Incoming request from origin:', origin);
+  next();
+});
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
