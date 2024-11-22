@@ -50,7 +50,7 @@ export class TodoService {
       this.myLoggerService.log('Fetching all Todos', 'TodoService');
       const where = status ? { status } : {};
       const todos = await this.todoRepository.find({ where });
-
+      console.log("fetching all todos", todos);
       this.myLoggerService.log(`Found ${todos.length} Todos with status: ${status || 'all'}`, 'TodoService');
       return todos;
     } catch (error) {

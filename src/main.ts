@@ -27,13 +27,17 @@ app.use((req: Request, _: any, next: NextFunction) => {
       forbidNonWhitelisted: true,
     }));
 
+    const allowedOrigins =
+    process.env.NODE_ENV === 'development'
+      ? ['http://localhost:3002'] 
+      : ['https://main.d2ad04cm30qoi2.amplifyapp.com']; 
+
   app.enableCors({
-    origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com',
-    credentials: true, 
+    origin: allowedOrigins,
+    credentials: true,
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
-
 
   const port = process.env.PORT || 10000;
   await app.listen(port);
