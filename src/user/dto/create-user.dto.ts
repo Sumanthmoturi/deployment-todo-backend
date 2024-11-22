@@ -41,5 +41,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString() 
   @Length(5, 20, { message: 'Password should be between 5 and 20 characters' })
-  password: string;
+  @Matches(/[A-Za-z0-9!@#$%^&*(),.?":{}|<>]/, {
+    message: 'Password must contain at least one special character and one number',
+  })
+    password: string;
 }

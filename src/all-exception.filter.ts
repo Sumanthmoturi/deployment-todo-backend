@@ -23,29 +23,33 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR, 
       timeStamp: new Date().toISOString(),
       path: request.url,
-      response: '',
+      response: 'Internal Server Error',
     };
 
     if (exception instanceof HttpException) {
-    
-      myResponseObj.statusCode = exception.getStatus();
-      myResponseObj.response = exception.getResponse();
-    } else {
-   
-      myResponseObj.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-      myResponseObj.response = 'Internal Server Error';
-    }
+      const exceptionResponse = exception.getResponse();
+      const exceptionMessage = 
+        typeof exceptionResponse === 'string' 
+          ? exceptionResponse 
+          : (exceptionResponse as any).message || JSON.stringify(exceptionResponse);
 
+      myResponseObj.statusCode = exception.getStatus();
+      myResponseObj.response = exceptionMessage;
+    } else {
+      console.error('Unexpected exception:', exception);
+    }
     response.status(myResponseObj.statusCode).json(myResponseObj);
 
-  
-    const responseMessage = typeof myResponseObj.response === 'string'
-      ? myResponseObj.response
-      : JSON.stringify(myResponseObj.response);
+    this.logger.error(
+      `Error occurred: ${JSON.stringify({
+        statusCode: myResponseObj.statusCode,
+        response: myResponseObj.response,
+        method: request.method,
+        url: request.url,
+      })}`,
+      exception instanceof Error ? exception.stack : null,
+    );
 
-    this.logger.error(responseMessage, AllExceptionsFilter.name);
-
-   
     super.catch(exception, host);
   }
 }

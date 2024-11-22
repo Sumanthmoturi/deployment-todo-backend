@@ -22,31 +22,39 @@ export class AuthService {
   
 
   async register(userDto: RegisterUserDto) {
-    const { email, mobile } = userDto;
-
-    const emailExists = await this.userRepository.findOne({ where: { email } });
-    if (emailExists) {
-      this.logger.warn(`Email already exists: ${email}`);
-      throw new ConflictException('Email already exists');
+    try {
+      const { email, mobile } = userDto;
+  
+      if (!this.validateMobile(mobile)) {
+        this.logger.warn(`Invalid mobile format: ${mobile}`);
+        throw new BadRequestException('Mobile number must be exactly 10 digits');
+      }
+  
+      const emailExists = await this.userRepository.findOne({ where: { email } });
+      if (emailExists) {
+        this.logger.warn(`Email already exists: ${email}`);
+        throw new ConflictException('Email already exists');
+      }
+  
+      const mobileExists = await this.userRepository.findOne({ where: { mobile } });
+      if (mobileExists) {
+        this.logger.warn(`Mobile already exists: ${mobile}`);
+        throw new ConflictException('Mobile already exists');
+      }
+  
+      const hashedPassword = await bcrypt.hash(userDto.password, 10);
+      const user = this.userRepository.create({
+        ...userDto,
+        password: hashedPassword,
+      });
+  
+      await this.userRepository.save(user);
+      this.logger.log(`User registered with mobile: ${mobile}`);
+      return user;
+    } catch (error) {
+      this.logger.error('Error during user registration:', error);
+      throw error;
     }
-
-    const mobileExists = await this.userRepository.findOne({ where: { mobile } });
-    if (mobileExists) {
-      this.logger.warn(`Mobile already exists: ${mobile}`);
-      throw new ConflictException('Mobile already exists');
-    }
-
-    if (!this.validateMobile(mobile)) {
-      this.logger.warn(`Invalid mobile format: ${mobile}`);
-      throw new BadRequestException('Mobile number must be exactly 10 digits');
-    }
-
-    const hashedPassword = await bcrypt.hash(userDto.password, 10);
-    const user = this.userRepository.create({ ...userDto,email, password: hashedPassword });
-
-    await this.userRepository.save(user);
-    this.logger.log(`User registered with mobile: ${mobile}`);
-    return user;
   }
 
   
