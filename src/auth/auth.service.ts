@@ -65,7 +65,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { mobile } });
 
     if (!user) {
-      this.myLoggerService.error(`Incorrect mobile number: ${mobile}`, 'AuthService0');
+      this.myLoggerService.error(`Incorrect mobile number: ${mobile}`, 'AuthService');
       throw new BadRequestException('Incorrect mobile number');
     }
 
