@@ -16,6 +16,8 @@ export class CreateTodoDto {
    
   @IsNotEmpty()
   @IsString()
-  @IsIn(['In progress', 'Completed'])
+  @IsIn(['In progress', 'Completed'], {
+  message: 'status must be one of the following values: In progress, Completed',
+  })
   status: string;
 }

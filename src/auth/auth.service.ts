@@ -19,14 +19,14 @@ export class AuthService {
     try {
       const { email, mobile, password } = userDto;
 
-      // Ensure that email, mobile, and password are provided
+      
       if (!email || !mobile || !password) {
         throw new BadRequestException('Email, mobile, and password are required');
       }
 
-      // Check for existing user by email or mobile
+      
       const existingUser = await this.userRepository.findOne({
-        where: [{ email }, { mobile }],
+        where: [{ email:userDto.email }, { mobile:userDto.mobile }],
       });
 
       if (existingUser) {
@@ -45,7 +45,7 @@ export class AuthService {
         }
       }
 
-      // Hash password with salt rounds (default to 10 rounds)
+     
       let hashedPassword: string;
       try {
         hashedPassword = await bcrypt.hash(password, 10); 
@@ -56,12 +56,11 @@ export class AuthService {
         throw new BadRequestException('Error hashing password');
       }
 
-      // Create the new user and save to database
+      
       const user = this.userRepository.create({
         ...userDto,
         password: hashedPassword,
       });
-
       await this.userRepository.save(user);
 
       const successMessage = `User successfully registered with mobile: ${mobile}`;
@@ -75,7 +74,7 @@ export class AuthService {
 
   async login(mobile: string, password: string) {
     try {
-      // Check if the user exists by mobile number
+      
       const user = await this.userRepository.findOne({ where: { mobile } });
 
       if (!user) {
@@ -85,7 +84,7 @@ export class AuthService {
         throw new BadRequestException('Incorrect mobile number');
       }
 
-      // Check if the password matches
+     
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
         const errorMessage = `Incorrect password for mobile: ${mobile}`;
@@ -94,7 +93,7 @@ export class AuthService {
         throw new BadRequestException('Incorrect password');
       }
 
-      // Generate JWT token if credentials are valid
+      
       const payload = { userId: user.id };
       const accessToken = this.jwtService.sign(payload);
 
