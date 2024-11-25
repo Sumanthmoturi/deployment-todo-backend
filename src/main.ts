@@ -29,7 +29,7 @@ app.use((req: Request, _: any, next: NextFunction) => {
 );
 
   app.enableCors({
-    origin: 'https://main.d2ad04cm30qoi2.amplifyapp.com',
+    origin: 'https://main.dgczfazb9womn.amplifyapp.com',
     credentials: true, 
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],

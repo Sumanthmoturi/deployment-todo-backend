@@ -40,7 +40,7 @@ export class TodoController {
     try {
       await this.myLoggerService.log('Fetching todos', 'TodoController');
       const todos = await this.todoService.findAll(status);
-
+      console.log("Fetch Todos", todos);
       await this.myLoggerService.log(`Found ${todos.length} todos with status: ${status || 'all'}`, 'TodoController');
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -60,7 +60,7 @@ export class TodoController {
   @Get(':id')
   async getTodoById(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     try {
-      const todo = await this.todoService.findOne(id);
+      const todo:Todo = await this.todoService.findOne(id);
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: 'Todo retrieved successfully',
