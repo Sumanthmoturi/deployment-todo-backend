@@ -26,7 +26,7 @@ export class AuthService {
 
       
       const existingUser = await this.userRepository.findOne({
-        where: [{ email:userDto.email }, { mobile:userDto.mobile }],
+        where: [{email }, { mobile }],
       });
 
       if (existingUser) {
@@ -105,5 +105,7 @@ export class AuthService {
       this.myLoggerService.error('Login failed', error.stack);
       throw error;
     }
+    
+    
   }
 }
