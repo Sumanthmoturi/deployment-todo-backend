@@ -12,7 +12,7 @@ type MyResponseObj = {
 
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
-  private readonly logger = new MyLoggerService(AllExceptionsFilter.name);
+  private readonly logger = new MyLoggerService();
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
