@@ -5,10 +5,15 @@ import * as path from 'path';
 
 @Injectable()
 export class MyLoggerService extends ConsoleLogger {
-    private logDirectory = path.join(__dirname, '..', '..', 'logs');
-    private logFile = path.join(this.logDirectory, 'myLogFile.log'); 
+    private logDirectory: string;
+    private logFile: string;
 
-
+    constructor() {
+        super();
+       
+        this.logDirectory = path.join(process.cwd(), 'logs');
+        this.logFile = path.join(this.logDirectory, 'myLogFile.log');
+    }
     private async ensureLogDirectoryExists(): Promise<void> {
         try {
             if (!fs.existsSync(this.logDirectory)) {

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus, ConflictException, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
+import { Controller,Get,Query, Post, Body, Res, HttpStatus, ConflictException, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -9,7 +9,26 @@ import { MyLoggerService } from '../my-logger/my-logger.service';
 export class AuthController {
   constructor(private authService: AuthService,
   private readonly myLoggerService:MyLoggerService) {}
+  
+  @Get('check-email')
+  async checkEmail(@Query('email') email: string, @Res() res: Response) {
+    try {
+      const exists = await this.authService.checkEmailExists(email);
+      return res.status(HttpStatus.OK).json({ exists });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+  }
 
+  @Get('check-mobile')
+  async checkMobile(@Query('mobile') mobile: string, @Res() res: Response) {
+    try {
+      const exists = await this.authService.checkMobileExists(mobile);
+      return res.status(HttpStatus.OK).json({ exists });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+  }
   @Post('register')
   async register(@Body() body: RegisterUserDto, @Res() res: Response) {
     try {

@@ -105,7 +105,17 @@ export class AuthService {
       this.myLoggerService.error('Login failed', error.stack);
       throw error;
     }
-    
-    
   }
+
+  async checkEmailExists(email: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    return !!user;
+  }
+
+  async checkMobileExists(mobile: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { mobile } });
+    return !!user;
+  }
+
+
 }
