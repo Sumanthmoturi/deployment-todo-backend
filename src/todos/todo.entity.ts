@@ -15,8 +15,11 @@ export class Todo {
   @Column({type:"int", default:0})
   time: number
 
-  @Column()
-  status: string;
+  @Column({
+    type: 'enum',
+    enum: ['In progress', 'Completed'],
+  })
+  status: 'In progress' | 'Completed';
 
   @ManyToOne(() => User, (user) => user.todos)
   user: User;

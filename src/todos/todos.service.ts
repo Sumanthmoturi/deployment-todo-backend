@@ -14,7 +14,7 @@ export class TodoService {
 
   async create(todoDto: CreateTodoDto): Promise<Todo> {
     this.logger.log('Creating a new Todo:', JSON.stringify(todoDto));
-    const { name, description, time,status } = todoDto;
+    const { name, description, time, status } = todoDto;
     
     const todoExists = await this.todoRepository.findOne({ where: { name } });
     if (todoExists) {
@@ -29,7 +29,7 @@ export class TodoService {
   
 
     
-  async findAll(status?: string, take?: number, skip?: number): Promise<Todo[]> {
+  async findAll(status?: 'In progress' | 'Completed', take?: number, skip?: number): Promise<Todo[]> {
     const where = status ? { status } : {};
     const todos = await this.todoRepository.find({ where, take, skip });
     if (todos.length === 0) {
@@ -52,10 +52,10 @@ export class TodoService {
     return todo;
   }
 
-  async updateStatus(id: number, status: string): Promise<Todo> {
+  async updateStatus(id: number, status: 'In progress' | 'Completed'): Promise<Todo> {
     const todo = await this.findOne(id);
   
-    if (!['in progress', 'completed'].includes(status)) {
+    if (!['In progress', 'Completed'].includes(status)) {
       this.logger.warn(`Invalid status value for Todo ID ${id}: ${status}`);
       throw new BadRequestException('Invalid status. Must be "in progress" or "completed".');
     }

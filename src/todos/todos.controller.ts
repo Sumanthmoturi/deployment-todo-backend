@@ -10,13 +10,13 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @Post()
-  async create(@Body() body: CreateTodoDto) {
+  async create(@Body() body: CreateTodoDto): Promise<Todo> {
     console.log('Creating a new Todo:', body);
     return this.todoService.create(body);
   }
 
   @Get()
-  async findAll(@Query('status') status?: string) {
+  async findAll(@Query('status') status?: 'In progress' | 'Completed') {
     console.log(`Fetching all todos. Status filter: ${status || 'none'}`);
     if (status && !['In progress', 'Completed'].includes(status)) {
       console.error(`Invalid status provided: ${status}`);
