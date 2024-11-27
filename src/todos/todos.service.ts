@@ -53,11 +53,11 @@ export class TodoService {
   }
 
   async updateStatus(id: number, status: 'In progress' | 'Completed'): Promise<Todo> {
-    const todo = await this.findOne(id);
+    const todo = await this.todoRepository.findOne({where:{id}});
   
-    if (!['In progress', 'Completed'].includes(status)) {
-      this.logger.warn(`Invalid status value for Todo ID ${id}: ${status}`);
-      throw new BadRequestException('Invalid status. Must be "in progress" or "completed".');
+    if (!todo) {
+      this.logger.warn(`Todo with ID ${id} not found`);
+      throw new NotFoundException(`Todo with ID ${id} not found`);
     }
   
     todo.status = status;

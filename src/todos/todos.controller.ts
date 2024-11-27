@@ -26,6 +26,7 @@ export class TodoController {
   }
 
   @Patch(':id/status')
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async updateStatus(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto): Promise<Todo> {
     console.log(`Updating status for Todo ID ${id}:`, body);
     return this.todoService.updateStatus(id, body.status);
