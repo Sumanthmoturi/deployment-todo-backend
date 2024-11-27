@@ -15,7 +15,7 @@ export class Todo {
   @Column({type:"int", default:0})
   time: number
 
-  @Column({ default: 'in-progress' })
+  @Column()
   status: string;
 
   @ManyToOne(() => User, (user) => user.todos)

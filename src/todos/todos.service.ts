@@ -14,7 +14,7 @@ export class TodoService {
 
   async create(todoDto: CreateTodoDto): Promise<Todo> {
     this.logger.log('Creating a new Todo:', JSON.stringify(todoDto));
-    const { name, description, time, status } = todoDto;
+    const { name, description, time,status } = todoDto;
     
     const todoExists = await this.todoRepository.findOne({ where: { name } });
     if (todoExists) {
@@ -66,6 +66,7 @@ export class TodoService {
     this.logger.log(`Updated status of Todo ID ${id} to ${status}`);
     return updatedTodo;
   }
+  
 
   
   async remove(id: number): Promise<void> {

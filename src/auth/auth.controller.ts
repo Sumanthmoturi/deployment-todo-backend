@@ -10,29 +10,10 @@ export class AuthController {
   constructor(private authService: AuthService,
   private readonly myLoggerService:MyLoggerService) {}
   
-  @Get('check-email')
-  async checkEmail(@Query('email') email: string, @Res() res: Response) {
-    try {
-      const exists = await this.authService.checkEmailExists(email);
-      return res.status(HttpStatus.OK).json({ exists });
-    } catch (error) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
-    }
-  }
-
-  @Get('check-mobile')
-  async checkMobile(@Query('mobile') mobile: string, @Res() res: Response) {
-    try {
-      const exists = await this.authService.checkMobileExists(mobile);
-      return res.status(HttpStatus.OK).json({ exists });
-    } catch (error) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
-    }
-  }
+  
   @Post('register')
   async register(@Body() body: RegisterUserDto, @Res() res: Response) {
     try {
-      
       await this.myLoggerService.log('Registration data received', 'AuthController');
       const result = await this.authService.register(body);
        await this.myLoggerService.log(`User registered successfully with mobile: ${body.mobile}`, 'AuthController');

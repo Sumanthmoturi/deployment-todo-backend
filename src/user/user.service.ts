@@ -13,14 +13,16 @@ export class UserService {
 
   
   async create(createUserDto: CreateUserDto): Promise<User> {
-    
-    const existingUser = await this.userRepository.findOne({
-      where: [{ mobile: createUserDto.mobile }, { email: createUserDto.email }],
-    });
-
-    if (existingUser) {
-      throw new ConflictException('Mobile or email already exists');
+    const existingUserByMobile = await this.userRepository.findOne({ where: { mobile: createUserDto.mobile } });
+    const existingUserByEmail = await this.userRepository.findOne({ where: { email: createUserDto.email } });
+    if (existingUserByMobile) {
+      throw new ConflictException('Mobile number already exists');
     }
+
+    if (existingUserByEmail) {
+      throw new ConflictException('Email address already exists');
+    }
+
 
     createUserDto.hobbies = Array.isArray(createUserDto.hobbies) 
       ? createUserDto.hobbies 
@@ -49,21 +51,23 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     await this.findOne(id);
 
-    if (updateUserDto.mobile || updateUserDto.email) {
-      const existingUser = await this.userRepository.findOne({
-        where: [{ mobile: updateUserDto.mobile }, { email: updateUserDto.email }],
-      });
-
-      if (existingUser) {
-        throw new ConflictException('Mobile or email already exists');
+    if (updateUserDto.mobile) {
+      const existingUserByMobile = await this.userRepository.findOne({ where: { mobile: updateUserDto.mobile } });
+      if (existingUserByMobile) {
+        throw new ConflictException('Mobile number already exists');
       }
     }
 
- 
+    if (updateUserDto.email) {
+      const existingUserByEmail = await this.userRepository.findOne({ where: { email: updateUserDto.email } });
+      if (existingUserByEmail) {
+        throw new ConflictException('Email address already exists');
+      }
+    }
+
     await this.userRepository.update(id, updateUserDto);
     return this.findOne(id);
   }
-
 
   async remove(id: number): Promise<void> {
     const result = await this.userRepository.delete(id);
@@ -71,14 +75,5 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
   }
- //today 
-  async findByEmail(email: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { email } });
-  }
-  
-  async findByMobile(mobile: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { mobile } });
-  }
- 
-}
 
+}

@@ -107,15 +107,4 @@ export class AuthService {
     }
   }
 
-  async checkEmailExists(email: string): Promise<boolean> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    return !!user;
-  }
-
-  async checkMobileExists(mobile: string): Promise<boolean> {
-    const user = await this.userRepository.findOne({ where: { mobile } });
-    return !!user;
-  }
-
-
 }

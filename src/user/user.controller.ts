@@ -36,17 +36,4 @@ export class UserController {
   async remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);
   }
-
-  @Get('check-email')
-  async checkEmail(@Query('email') email: string) {
-    const user = await this.userService.findByEmail(email);
-    return { exists: !!user };
-}
-
-
-@Get('check-mobile')
-async checkMobile(@Query('mobile') mobile: string) {
-  const user = await this.userService.findByMobile(mobile);
-   return { exists: !!user };
-}
 }

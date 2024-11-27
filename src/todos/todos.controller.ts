@@ -10,7 +10,6 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ transform: true }))
   async create(@Body() body: CreateTodoDto) {
     console.log('Creating a new Todo:', body);
     return this.todoService.create(body);
@@ -19,21 +18,22 @@ export class TodoController {
   @Get()
   async findAll(@Query('status') status?: string) {
     console.log(`Fetching all todos. Status filter: ${status || 'none'}`);
-    if (status && !['in progress', 'completed'].includes(status)) {
+    if (status && !['In progress', 'Completed'].includes(status)) {
       console.error(`Invalid status provided: ${status}`);
-      throw new BadRequestException('Invalid status. Must be "in progress" or "completed".');
+      throw new BadRequestException('Invalid status. Must be "In progress" or "Completed".');
     }
     return this.todoService.findAll(status);
   }
 
   @Patch(':id/status')
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async updateStatus(@Param('id',ParseIntPipe) id: number, @Body() UpdateTodoStatusDto: UpdateTodoStatusDto,) {
-    return this.todoService.updateStatus(id, UpdateTodoStatusDto.status);
+  async updateStatus(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto): Promise<Todo> {
+    console.log(`Updating status for Todo ID ${id}:`, body);
+    return this.todoService.updateStatus(id, body.status);
   }
 
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number): Promise<{message: string}> {
+    console.log(`Attempting to delete Todo with ID: ${id}`);
     await this.todoService.remove(id);
   console.log(`Todo with ID ${id} deleted successfully`);
   return { message: `Todo with ID ${id} has been deleted successfully.` };
@@ -41,6 +41,7 @@ export class TodoController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
+    console.log(`Fetching Todo with ID: ${id}`);
     return this.todoService.findOne(id);
   }
 }
