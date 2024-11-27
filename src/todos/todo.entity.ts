@@ -18,6 +18,7 @@ export class Todo {
   @Column({
     type: 'enum',
     enum: ['In progress', 'Completed'],
+    default: 'In progress', 
   })
   status: 'In progress' | 'Completed';
 
