@@ -31,7 +31,7 @@ async function bootstrap() {
 );
 
   app.enableCors({
-    origin: 'http://65.1.106.158:3002',
+    origin: 'http://ec2-13-203-66-124.ap-south-1.compute.amazonaws.com:3002',
     credentials: true, 
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -41,6 +41,6 @@ async function bootstrap() {
   const port = process.env.PORT || 10000;
   await app.listen(port);
   
-  logger.log(`Backend is running on http://localhost:${port} or on Render at http://13.201.192.253:10000`);
+  logger.log(`Backend is running on http://localhost:${port} or on Render at http://ec2-13-203-66-124.ap-south-1.compute.amazonaws.com:10000`);
 }
 bootstrap();
