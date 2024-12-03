@@ -26,7 +26,6 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/passport": "^10.0.3",
-    "@nestjs/platform-express": "^10.4.9",
     "@nestjs/throttler": "^6.2.1",
     "@nestjs/typeorm": "^10.0.2",
     "@vercel/node": "^2.10.3",

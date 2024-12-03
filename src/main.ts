@@ -31,7 +31,7 @@ async function bootstrap() {
 );
 
   app.enableCors({
-    origin: 'https://main.dgczfazb9womn.amplifyapp.com',
+    origin: 'http://13.201.192.253:3002',
     credentials: true, 
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -41,6 +41,6 @@ async function bootstrap() {
   const port = process.env.PORT || 10000;
   await app.listen(port);
   
-  logger.log(`Backend is running on http://localhost:${port} or on Render at https://deployment-todo-backend.onrender.com`);
+  logger.log(`Backend is running on http://localhost:${port} or on Render at http://13.201.192.253:10000`);
 }
 bootstrap();
