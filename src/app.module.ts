@@ -18,19 +18,13 @@ import { AppController } from './app.controller';
   
     TypeOrmModule.forRoot({
       type: 'postgres',  
-      host: 'dpg-cssaaphu0jms73e89el0-a', 
+      host: 'localhost', 
       port: 5432,        
-      username: 'todos_app_db_1frl_user', 
-      password: 'LpuzpwJbu8XWDNHJndcemzW14K7mekBx', 
-      database: 'todos_app_db_1frl',  
-      url: process.env.DATABASE_URL,
-      autoLoadEntities: true, 
+      username: 'todos_user',
+      password: 'secure_password',
+      database: 'todos_app_db',
+      autoLoadEntities: true,
       synchronize: true,
-      extra: {
-        ssl: {
-          rejectUnauthorized: false, 
-        },
-      }
     }),
     AuthModule, 
     TodoModule, 
