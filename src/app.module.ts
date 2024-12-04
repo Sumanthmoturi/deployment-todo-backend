@@ -18,8 +18,13 @@ import { AppController } from './app.controller';
   
     TypeOrmModule.forRoot({
       type: 'postgres',  
-      url:process.env.DATABASE_URL,
-      autoLoadEntities: true,
+      host: 'localhost', 
+      port: 5432,        
+      username: 'postgres', 
+      password: 'new_password', 
+      database: 'postgres', 
+      url: process.env.DATABASE_URL,
+      autoLoadEntities: true, 
       synchronize: true,
     }),
     AuthModule, 
