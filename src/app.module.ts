@@ -23,6 +23,7 @@ import { AppController } from './app.controller';
       autoLoadEntities: true, 
       synchronize: false,
     }),
+    
     AuthModule, 
     TodoModule, 
     UserModule, 
