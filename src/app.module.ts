@@ -18,11 +18,7 @@ import { AppController } from './app.controller';
   
     TypeOrmModule.forRoot({
       type: 'postgres',  
-      host: 'database-1.ctuoaiyu47oa.ap-south-1.rds.amazonaws.com', 
-      port: 5432,        
-      username: 'postgresql',
-      password: 'Msumanth2177',
-      database: 'database-1',
+      url:process.env.DATABASE_URL,
       autoLoadEntities: true,
       synchronize: true,
     }),
