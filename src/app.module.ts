@@ -21,7 +21,7 @@ import { AppController } from './app.controller';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       autoLoadEntities: true, 
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule, 
     TodoModule, 
