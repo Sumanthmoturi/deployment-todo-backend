@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs:true,
   })
+  
   const logger = app.get(MyLoggerService);
   app.useLogger(logger);
   const {httpAdapter} =app.get(HttpAdapterHost)
