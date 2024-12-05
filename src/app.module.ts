@@ -19,7 +19,7 @@ import { AppController } from './app.controller';
   
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+      url: 'postgresql://postgres:password@15.207.247.253:5432/postgres',
       autoLoadEntities: true, 
       synchronize: true,
       ssl: {
