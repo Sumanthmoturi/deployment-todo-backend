@@ -32,7 +32,7 @@ async function bootstrap() {
 );
 
   app.enableCors({
-    origin: 'http://ec2-13-201-22-238.ap-south-1.compute.amazonaws.com',
+    origin: 'http://ec2-13-201-22-238.ap-south-1.compute.amazonaws.com:3002',
     credentials: true, 
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
