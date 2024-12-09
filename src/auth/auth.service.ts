@@ -95,7 +95,10 @@ export class AuthService {
 
       
       const payload = { userId: user.id };
-      const accessToken = this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload, {
+        secret:process.env.JWT_SECRET,
+        expiresIn:'60s'
+      });
 
       const successMessage = `User logged in successfully with mobile: ${mobile}`;
       this.myLoggerService.log(successMessage, 'AuthService');
