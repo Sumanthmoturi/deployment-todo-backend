@@ -42,8 +42,8 @@ export class AuthController {
       await this.myLoggerService.log(`User logged in successfully with mobile: ${mobile}`, 'AuthController');
       res.cookie('token', result.accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        secure: false,
+        sameSite: 'lax',
         maxAge: 3600000,
       });
 
