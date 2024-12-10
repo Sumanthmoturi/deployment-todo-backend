@@ -6,6 +6,7 @@ import { User } from './user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { MyLoggerService } from '../my-logger/my-logger.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly myLoggerService: MyLoggerService,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private configService: ConfigService,
   ) {}
 
   async register(userDto: RegisterUserDto) {
@@ -74,9 +76,7 @@ export class AuthService {
 
   async login(mobile: string, password: string) {
     try {
-      
       const user = await this.userRepository.findOne({ where: { mobile } });
-
       if (!user) {
         const errorMessage = `Incorrect mobile number: ${mobile}`;
         console.error(errorMessage);
@@ -95,7 +95,15 @@ export class AuthService {
 
       
       const payload = { userId: user.id };
-      const accessToken = this.jwtService.sign(payload)
+      const secret = this.configService.get<string>('JWT_SECRET');
+      if (!secret) {
+        throw new Error('JWT_SECRET is not defined');
+      }
+
+      const accessToken = this.jwtService.sign(payload, {
+        secret,
+        expiresIn: '60s',
+      });
 
       const successMessage = `User logged in successfully with mobile: ${mobile}`;
       this.myLoggerService.log(successMessage, 'AuthService');
