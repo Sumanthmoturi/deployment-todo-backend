@@ -10,7 +10,10 @@ import { MyLoggerModule } from 'src/my-logger/my-logger.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),                               
-    ConfigModule,                                                    
+    ConfigModule.forRoot({
+      isGlobal: true,  
+      envFilePath: '.env',
+    }),                                                    
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
