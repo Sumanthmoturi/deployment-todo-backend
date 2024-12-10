@@ -4,6 +4,9 @@ import { AllExceptionsFilter } from './all-exception.filter';
 import { MyLoggerService } from './my-logger/my-logger.service';
 import { NextFunction,Response, Request} from 'express';
 import { ValidationPipe } from '@nestjs/common'; 
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

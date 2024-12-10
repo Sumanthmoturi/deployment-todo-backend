@@ -1,4 +1,4 @@
-import { Controller,Get,Query, Post, Body, Res, HttpStatus, ConflictException, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
+import { Controller,Post, Body, Res, HttpStatus, ConflictException, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express'; 
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -42,7 +42,7 @@ export class AuthController {
       await this.myLoggerService.log(`User logged in successfully with mobile: ${mobile}`, 'AuthController');
       res.cookie('token', result.accessToken, {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 3600000,
       });
