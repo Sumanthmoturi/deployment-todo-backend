@@ -14,8 +14,12 @@ export class AuthController {
   @Post('register')
   async register(@Body() body: RegisterUserDto, @Res() res: Response) {
     try {
-      delete body.otherHobby;
-      delete body.otherCountry;
+      if (!body.otherHobby) {
+        delete body.otherHobby;
+      }
+      if (!body.otherCountry) {
+        delete body.otherCountry;
+      }
       
       await this.myLoggerService.log('Registration data received', 'AuthController');
       const result = await this.authService.register(body);
