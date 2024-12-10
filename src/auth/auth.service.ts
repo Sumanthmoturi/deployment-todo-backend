@@ -96,6 +96,7 @@ export class AuthService {
       
       const payload = { userId: user.id };
       const secret = this.configService.get<string>('JWT_SECRET');
+      console.log('JWT_SECRET:', secret);
       if (!secret) {
         throw new Error('JWT_SECRET is not defined');
       }

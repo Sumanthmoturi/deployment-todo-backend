@@ -9,6 +9,10 @@ import { MyLoggerModule } from 'src/my-logger/my-logger.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, 
+      envFilePath: '.env', 
+    }),
     TypeOrmModule.forFeature([User]),                                                                                  
     JwtModule.registerAsync({
       imports: [ConfigModule],
