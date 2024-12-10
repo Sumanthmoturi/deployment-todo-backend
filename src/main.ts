@@ -44,8 +44,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 80;
   await app.listen(port, '0.0.0.0');
-  
-  logger.log(`Backend is running on http://localhost:${port} or on Render at http://ec2-13-201-101-208.ap-south-1.compute.amazonaws.com`);
+  logger.log(`Backend is running on http://localhost:${port} or on Render at http://ec2-15-207-221-132.ap-south-1.compute.amazonaws.com`);
 }
 bootstrap();
 
