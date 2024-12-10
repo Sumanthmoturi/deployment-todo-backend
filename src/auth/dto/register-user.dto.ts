@@ -22,6 +22,10 @@ export class RegisterUserDto {
   @IsArray()
   hobbies: string[];
 
+  @IsOptional() // Mark as optional to allow empty values
+  @IsString()
+  otherHobby?: string;
+
   @IsEmail({})
   @Matches(/^[a-zA-Z0-9._%+-]+(\+[\d]+)?@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
     message: 'Invalid email format',

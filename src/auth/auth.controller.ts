@@ -14,6 +14,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() body: RegisterUserDto, @Res() res: Response) {
     try {
+      
       await this.myLoggerService.log('Registration data received', 'AuthController');
       const result = await this.authService.register(body);
        await this.myLoggerService.log(`User registered successfully with mobile: ${body.mobile}`, 'AuthController');
