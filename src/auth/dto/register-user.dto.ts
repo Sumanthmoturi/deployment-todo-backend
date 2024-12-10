@@ -22,7 +22,7 @@ export class RegisterUserDto {
   @IsArray()
   hobbies: string[];
 
-  @IsOptional() // Mark as optional to allow empty values
+  @IsOptional()
   @IsString()
   otherHobby?: string;
 
