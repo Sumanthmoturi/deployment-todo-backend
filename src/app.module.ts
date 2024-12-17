@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule,MiddlewareConsumer} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TodoModule } from './todos/todos.module';
@@ -8,7 +8,7 @@ import { AppService } from './app.service';
 import { MyLoggerModule } from './my-logger/my-logger.module';
 import { AppController } from './app.controller';
 import { JwtStrategy } from './auth/jwt.strategy';
-
+import { CorsMiddleware } from './cors.middleware';
 
 @Module({
   imports: [
@@ -33,11 +33,14 @@ import { JwtStrategy } from './auth/jwt.strategy';
     UserModule, 
     MyLoggerModule,
 ],
+
 controllers:[AppController],
 providers: [AppService],
 })
 
-export class AppModule {}
-
-
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorsMiddleware).forRoutes('*');
+  }
+}
 

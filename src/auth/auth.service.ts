@@ -106,8 +106,6 @@ export class AuthService {
         expiresIn: '7d',
       });
   
-      const decodedToken = this.jwtService.decode(accessToken) as any;
-      console.log('Decoded Token:', decodedToken);
   
       return { accessToken };
     } catch (error) {
