@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AppService } from './app.service';
 import { MyLoggerModule } from './my-logger/my-logger.module';
 import { AppController } from './app.controller';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 
 @Module({

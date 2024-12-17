@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn,ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,JoinColumn,ManyToOne } from 'typeorm';
 import { User } from '../auth/user.entity';
 
 @Entity()
@@ -23,5 +23,7 @@ export class Todo {
   status: 'In progress' | 'Completed';
 
   @ManyToOne(() => User, (user) => user.todos)
+  @JoinColumn({ name: 'userId' })
   user: User;
+
 }

@@ -96,24 +96,23 @@ export class AuthService {
       
       const payload = { userId: user.id };
       const secret = this.configService.get<string>('JWT_SECRET');
-      console.log('JWT_SECRET:', secret);
+  
       if (!secret) {
         throw new Error('JWT_SECRET is not defined');
       }
-
+  
       const accessToken = this.jwtService.sign(payload, {
         secret,
-        expiresIn: '60s',
+        expiresIn: '7d',
       });
-
-      const successMessage = `User logged in successfully with mobile: ${mobile}`;
-      this.myLoggerService.log(successMessage, 'AuthService');
+  
+      const decodedToken = this.jwtService.decode(accessToken) as any;
+      console.log('Decoded Token:', decodedToken);
+  
       return { accessToken };
     } catch (error) {
       console.error('Login Error:', error.message);
-      this.myLoggerService.error('Login failed', error.stack);
       throw error;
     }
   }
-
 }

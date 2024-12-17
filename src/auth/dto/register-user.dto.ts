@@ -22,6 +22,8 @@ export class RegisterUserDto {
   @IsArray()
   hobbies: string[];
 
+  
+
 
   @IsEmail({})
   @Matches(/^[a-zA-Z0-9._%+-]+(\+[\d]+)?@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsEnum, Min, Max } from 'class-validator';
+import { IsNotEmpty, IsString,IsOptional, IsNumber, IsEnum, Min, Max } from 'class-validator';
 
 export class CreateTodoDto {
   @IsNotEmpty()
@@ -19,4 +19,5 @@ export class CreateTodoDto {
     message: 'status must be one of the following values: In progress, Completed',
   })
   status: 'In progress' | 'Completed';
+  
 }
