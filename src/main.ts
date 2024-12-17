@@ -36,28 +36,15 @@ async function bootstrap() {
     })
 );
 
-const origin = 
-    process.env.NODE_ENV === 'production'
-    ? process.env.PRODUCTION_URL 
-    : 'http://localhost:3002';
-console.log(`CORS Origin: ${origin}`);
+const allowedOrigin = 'http://ec2-13-201-22-238.ap-south-1.compute.amazonaws.com';
+  console.log(`CORS Origin: ${allowedOrigin}`);
   
-    app.enableCors({
-      origin: (origin, callback) => {
-        if (process.env.NODE_ENV === 'production') {
-          callback(null, true);
-        } else {
-          if (origin === 'http://localhost:3002') {
-            callback(null, true);
-          } else {
-            callback(new Error('CORS not allowed for this origin'), false);
-          }
-        }
-      },
-      credentials: true,
-      methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-      allowedHeaders: ['Content-Type', 'Authorization'],
-    });
+  app.enableCors({
+    origin: allowedOrigin,
+    credentials: true,
+    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
 
   const port = process.env.PORT || 80;
