@@ -102,7 +102,7 @@ export class AuthService {
       }
   
       const accessToken = this.jwtService.sign(payload, {
-        secret,
+        secret: this.configService.get<string>('JWT_SECRET'),
         expiresIn: '7d',
       });
   
