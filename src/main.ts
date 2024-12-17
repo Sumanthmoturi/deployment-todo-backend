@@ -60,7 +60,7 @@ console.log(`CORS Origin: ${origin}`);
     });
 
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 80;
   await app.listen(port, '0.0.0.0');
   logger.log(`Backend is running on http://localhost:${port} or on Render at http://ec2-15-207-221-132.ap-south-1.compute.amazonaws.com`);
 }
