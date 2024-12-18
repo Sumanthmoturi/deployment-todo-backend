@@ -10,7 +10,7 @@ export class TodoController {
   
   @Get()
   async findAll(
-    @Query('userId', ParseIntPipe) userId: number,
+    @Query('userId') userId: number,
     @Query('status') status?: 'In progress' | 'Completed'
   ): Promise<Todo[]> {
     if (!userId) {
@@ -22,7 +22,7 @@ export class TodoController {
   @Post()
   async create(
     @Body() createTodoDto: CreateTodoDto,
-    @Query('userId', ParseIntPipe) userId: number
+    @Query('userId') userId: number
   ): Promise<Todo> {
     if (!userId) {
       throw new BadRequestException('UserId is required to create a todo');
@@ -34,9 +34,9 @@ export class TodoController {
   
   @Patch(':id/status')
   async updateStatus(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() body: UpdateTodoStatusDto,
-    @Query('userId', ParseIntPipe) userId: number
+    @Query('userId') userId: number
   ): Promise<Todo> {
     if (!userId) {
       throw new BadRequestException('UserId is required to update todo status');
@@ -46,8 +46,8 @@ export class TodoController {
 
   @Delete(':id')
   async delete(
-    @Param('id', ParseIntPipe) id: number,
-    @Query('userId', ParseIntPipe) userId: number
+    @Param('id') id: number,
+    @Query('userId') userId: number
   ): Promise<{ message: string }> {
     if (!userId) {
       throw new BadRequestException('UserId is required to delete a todo');
@@ -58,7 +58,7 @@ export class TodoController {
 
   @Get(':id')
   async findOne(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Query('userId', ParseIntPipe) userId: number
   ): Promise<Todo> {
     if (!userId) {
