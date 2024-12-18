@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { MyLoggerService } from '../my-logger/my-logger.service'; 
+import { access } from 'fs';
 
 @Controller('auth')
 export class AuthController {
@@ -38,17 +39,12 @@ export class AuthController {
         throw new BadRequestException('Mobile and password are required');
       }
 
-      const {accessToken} = await this.authService.login(mobile, password);
+      const {message,user} = await this.authService.login(body);
       
-      res.cookie('access_token', accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'none',
-        maxAge: 7* 24* 60* 60*1000, 
-      });
       await this.myLoggerService.log(`User logged in successfully with mobile: ${mobile}`, 'AuthController');
       return res.status(HttpStatus.OK).json({
-        message: 'Login successful',
+        message,
+        user,      
       });
     } catch (error) {
       await this.myLoggerService.error('Login failed', error.stack);
@@ -60,7 +56,6 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Res() res: Response) {
-    res.clearCookie('access_token');
     return res.status(HttpStatus.OK).json({ message: 'Logout successful' });
   }
 }

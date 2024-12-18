@@ -9,7 +9,10 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
   
   @Get()
-  async findAll(@Query('userId', ParseIntPipe) userId?: number, @Query('status') status?: 'In progress' | 'Completed'): Promise<Todo[]> {
+  async findAll(
+    @Query('userId', ParseIntPipe) userId: number,
+    @Query('status') status?: 'In progress' | 'Completed'
+  ): Promise<Todo[]> {
     if (!userId) {
       throw new BadRequestException('UserId is required to fetch todos');
     }
@@ -17,7 +20,10 @@ export class TodoController {
   }
 
   @Post()
-  async create(@Body() createTodoDto: CreateTodoDto, @Query('userId', ParseIntPipe) userId: number): Promise<Todo> {
+  async create(
+    @Body() createTodoDto: CreateTodoDto,
+    @Query('userId', ParseIntPipe) userId: number
+  ): Promise<Todo> {
     if (!userId) {
       throw new BadRequestException('UserId is required to create a todo');
     }
@@ -25,8 +31,13 @@ export class TodoController {
   }
 
 
+  
   @Patch(':id/status')
-  async updateStatus(@Param('id',ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto,@Query('userId', ParseIntPipe) userId: number ): Promise<Todo> {
+  async updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateTodoStatusDto,
+    @Query('userId', ParseIntPipe) userId: number
+  ): Promise<Todo> {
     if (!userId) {
       throw new BadRequestException('UserId is required to update todo status');
     }
@@ -34,7 +45,10 @@ export class TodoController {
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number, @Query('userId', ParseIntPipe) userId: number): Promise<{ message: string }> {
+  async delete(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('userId', ParseIntPipe) userId: number
+  ): Promise<{ message: string }> {
     if (!userId) {
       throw new BadRequestException('UserId is required to delete a todo');
     }
@@ -43,7 +57,10 @@ export class TodoController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number, @Query('userId', ParseIntPipe) userId: number): Promise<Todo> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('userId', ParseIntPipe) userId: number
+  ): Promise<Todo> {
     if (!userId) {
       throw new BadRequestException('UserId is required to fetch a specific todo');
     }

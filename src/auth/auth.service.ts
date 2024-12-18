@@ -7,7 +7,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { MyLoggerService } from '../my-logger/my-logger.service';
 import { ConfigService } from '@nestjs/config';
-
+import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -74,16 +74,20 @@ export class AuthService {
     }
   }
 
-  async login(mobile: string, password: string) {
+  async login(loginDto: LoginDto) {
     try {
-      const user = await this.userRepository.findOne({ where: { mobile } });
-      if (!user) {
-        const errorMessage = `Incorrect mobile number: ${mobile}`;
-        console.error(errorMessage);
-        this.myLoggerService.error(errorMessage, 'AuthService');
-        throw new BadRequestException('Incorrect mobile number');
+      const { mobile, password } = loginDto;
+
+      if (!mobile || !password) {
+        throw new BadRequestException('Mobile and password are required');
       }
 
+      const user = await this.userRepository.findOne({ where: { mobile } });
+      if (!user) {
+        const errorMessage = `User with mobile number ${mobile} does not exist.`;
+        this.myLoggerService.error(errorMessage, 'AuthService');
+        throw new BadRequestException('User with this mobile does not exist');
+      }
      
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
@@ -94,14 +98,10 @@ export class AuthService {
       }
 
       
-      const payload = { userId: user.id };
-      const accessToken = this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('JWT_SECRET'),
-        expiresIn: '7d',
-      });
-  
-  
-      return { accessToken };
+      const successMessage = `User logged in successfully with mobile: ${mobile}`;
+      this.myLoggerService.log(successMessage, 'AuthService');
+
+      return { message: 'Login successful', user: user };
     } catch (error) {
       console.error('Login Error:', error.message);
       throw error;
