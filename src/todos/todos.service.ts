@@ -7,7 +7,7 @@ import { CreateTodoDto } from '../auth/dto/create-todo.dto';
 
 @Injectable()
 export class TodoService {
-  private readonly logger = new Logger(TodoService.name); // Logger instance
+  private readonly logger = new Logger(TodoService.name);
 
   constructor(
     @InjectRepository(Todo) private readonly todoRepository: Repository<Todo>) {}
