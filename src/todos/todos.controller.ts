@@ -8,15 +8,13 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @Controller('todo')
 export class TodoController {
   constructor(private todoService: TodoService) {}
-
-  @UseGuards(JwtAuthGuard)  
+  
   @Get()
   async findAll(@Request() req,@Query('status') status?: 'In progress' | 'Completed'): Promise<Todo[]> {
     const userId = req.user.userId;
     return this.todoService.findAll(userId, status);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createTodoDto: CreateTodoDto, @Request() req): Promise<Todo> {
     const userId = req.user.userId;
@@ -24,14 +22,12 @@ export class TodoController {
   }
 
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id/status')
   async updateStatus(@Param('id',ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto, @Request() req): Promise<Todo> {
     const userId = req.user.userId;
     return this.todoService.updateStatus(id, body.status, userId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<{ message: string }> {
     const userId = req.user.userId;
@@ -39,7 +35,6 @@ export class TodoController {
     return { message: `Todo with ID ${id} has been deleted successfully.` };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id',ParseIntPipe) id: number, @Request() req): Promise<Todo> {
     const userId = req.user.userId;
