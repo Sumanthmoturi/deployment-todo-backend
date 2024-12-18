@@ -95,12 +95,6 @@ export class AuthService {
 
       
       const payload = { userId: user.id };
-      const secret = this.configService.get<string>('JWT_SECRET');
-  
-      if (!secret) {
-        throw new Error('JWT_SECRET is not defined');
-      }
-  
       const accessToken = this.jwtService.sign(payload, {
         secret: this.configService.get<string>('JWT_SECRET'),
         expiresIn: '7d',

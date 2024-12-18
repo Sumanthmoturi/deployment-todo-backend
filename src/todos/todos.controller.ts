@@ -34,7 +34,7 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<{ message: string }> {
-    const userId = req.user.user.id;
+    const userId = req.user.userId;
     await this.todoService.remove(id, userId);
     return { message: `Todo with ID ${id} has been deleted successfully.` };
   }
