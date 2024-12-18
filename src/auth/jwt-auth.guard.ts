@@ -8,13 +8,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  handleRequest(err, user, info) {
-    if (err || !user) {
-      throw err || new UnauthorizedException();
-    }
-    return user;
-  }
-
   async canActivate(context) {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['access_token'];
