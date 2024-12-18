@@ -20,4 +20,9 @@ export class CreateTodoDto {
   })
   status: 'In progress' | 'Completed';
   
+  @IsOptional()
+  @IsNumber()
+  userId: number;
+
 }
+
