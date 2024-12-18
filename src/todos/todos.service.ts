@@ -22,10 +22,13 @@ export class TodoService {
   
 
     
-  async findAll(userId: number, status?: 'In progress' | 'Completed'): Promise<Todo[]> {
+    async findAll(userId: number, status?: 'In progress' | 'Completed'): Promise<Todo[]> {
+      if (isNaN(userId)) {
+        throw new BadRequestException('Invalid userId');
+      }
       const whereCondition = { user: { id: userId }, ...(status ? { status } : {}) };
-      return this.todoRepository.find({ where:whereCondition});
-  }
+      return this.todoRepository.find({ where: whereCondition });
+    }
 
     
 

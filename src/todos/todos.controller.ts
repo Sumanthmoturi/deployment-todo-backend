@@ -12,33 +12,37 @@ export class TodoController {
   
   @Get()
   async findAll(@Request() req, @Query('status') status?: 'In progress' | 'Completed'): Promise<Todo[]> {
-    const userId = req.user.id;
+    const userId = req.user.userId;
+    console.log("UserId from JWT:", userId); 
+    if (isNaN(userId)) {
+      throw new BadRequestException('Invalid userId in JWT');
+    }
     return this.todoService.findAll(userId, status);
   }
 
   @Post()
   async create(@Body() createTodoDto: CreateTodoDto, @Request() req): Promise<Todo> {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.todoService.create(createTodoDto, userId);
   }
 
 
   @Patch(':id/status')
   async updateStatus(@Param('id',ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto, @Request() req): Promise<Todo> {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.todoService.updateStatus(id, body.status, userId);
   }
 
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<{ message: string }> {
-    const userId = req.user.id; 
+    const userId = req.user.userId; 
     await this.todoService.remove(id, userId);
     return { message: `Todo with ID ${id} has been deleted successfully.` };
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<Todo> {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.todoService.findOne(id, userId);
   }
 }
