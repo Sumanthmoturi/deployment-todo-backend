@@ -17,8 +17,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     try {
-      const user = await this.jwtService.verifyAsync(token);
-      request.user = user; 
+      const user = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET,
+      });
+      request.user = user;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
