@@ -3,46 +3,50 @@ import { TodoService } from './todos.service';
 import { Todo } from './todo.entity';
 import { CreateTodoDto } from '../auth/dto/create-todo.dto';
 import { UpdateTodoStatusDto } from '../auth/dto/update-todo-status.dto';
-import { JwtGuard } from '../auth/jwt-auth.guard';
 
 @Controller('todo')
-@UseGuards(JwtGuard)
 export class TodoController {
   constructor(private todoService: TodoService) {}
   
   @Get()
-  async findAll(@Request() req, @Query('status') status?: 'In progress' | 'Completed'): Promise<Todo[]> {
-    const userId = req.user.userId;
-    console.log("UserId from JWT:", userId); 
-    if (isNaN(userId)) {
-      throw new BadRequestException('Invalid userId in JWT');
+  async findAll(@Query('userId', ParseIntPipe) userId?: number, @Query('status') status?: 'In progress' | 'Completed'): Promise<Todo[]> {
+    if (!userId) {
+      throw new BadRequestException('UserId is required to fetch todos');
     }
     return this.todoService.findAll(userId, status);
   }
 
   @Post()
-  async create(@Body() createTodoDto: CreateTodoDto, @Request() req): Promise<Todo> {
-    const userId = req.user.userId;
+  async create(@Body() createTodoDto: CreateTodoDto, @Query('userId', ParseIntPipe) userId: number): Promise<Todo> {
+    if (!userId) {
+      throw new BadRequestException('UserId is required to create a todo');
+    }
     return this.todoService.create(createTodoDto, userId);
   }
 
 
   @Patch(':id/status')
-  async updateStatus(@Param('id',ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto, @Request() req): Promise<Todo> {
-    const userId = req.user.userId;
+  async updateStatus(@Param('id',ParseIntPipe) id: number, @Body() body: UpdateTodoStatusDto,@Query('userId', ParseIntPipe) userId: number ): Promise<Todo> {
+    if (!userId) {
+      throw new BadRequestException('UserId is required to update todo status');
+    }
     return this.todoService.updateStatus(id, body.status, userId);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<{ message: string }> {
-    const userId = req.user.userId; 
+  async delete(@Param('id', ParseIntPipe) id: number, @Query('userId', ParseIntPipe) userId: number): Promise<{ message: string }> {
+    if (!userId) {
+      throw new BadRequestException('UserId is required to delete a todo');
+    }
     await this.todoService.remove(id, userId);
     return { message: `Todo with ID ${id} has been deleted successfully.` };
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number, @Request() req): Promise<Todo> {
-    const userId = req.user.userId;
+  async findOne(@Param('id', ParseIntPipe) id: number, @Query('userId', ParseIntPipe) userId: number): Promise<Todo> {
+    if (!userId) {
+      throw new BadRequestException('UserId is required to fetch a specific todo');
+    }
     return this.todoService.findOne(id, userId);
   }
 }
