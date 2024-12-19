@@ -36,16 +36,17 @@ async function bootstrap() {
     })
 );
 
+const isDevelopment = process.env.NODE_ENV === 'development';  
   
   app.enableCors({
-    origin: 'http://ec2-13-201-22-238.ap-south-1.compute.amazonaws.com',
+    origin: isDevelopment ? 'http://localhost:3002' : 'http://ec2-13-201-22-238.ap-south-1.compute.amazonaws.com',
     credentials: true,
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
 
-  const port = process.env.PORT || 80;
+  const port = process.env.PORT || 3001;
   await app.listen(port, '0.0.0.0');
   logger.log(`Backend is running on http://localhost:${port} or on Render at http://ec2-15-207-221-132.ap-south-1.compute.amazonaws.com`);
 }

@@ -14,29 +14,27 @@ export class TodoService {
     @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {}
  
-  async getTodosForUser(userId: number): Promise<Todo[]> {
-    return this.todoRepository.find({
-      where: { user: { id: userId } },
-    });
-  }
  
   async create(createTodoDto: CreateTodoDto, userId: number): Promise<Todo> {
+    try {
       const { name, description, time, status } = createTodoDto;
       const todo = this.todoRepository.create({ name, description, time, status, user: { id: userId } });
       const savedTodo = await this.todoRepository.save(todo);
       this.logger.log(`Todo created successfully: ${savedTodo.name}`);
       return savedTodo;
+    } catch (error) {
+      this.logger.error('Error creating Todo', error);
+      throw new ConflictException('Error creating Todo');
     }
-  
+  }
 
     
-    async findAll(userId: number, status?: 'In progress' | 'Completed'): Promise<Todo[]> {
-      if (isNaN(userId)) {
-        throw new BadRequestException('Invalid userId');
-      }
-      const whereCondition = { user: { id: userId }, ...(status ? { status } : {}) };
-      return this.todoRepository.find({ where: whereCondition });
-    }
+  async findAll(userId: number, status?: 'In progress' | 'Completed'): Promise<Todo[]> {
+    const whereCondition = { user: { id: userId }, ...(status ? { status } : {}) };
+    return this.todoRepository.find({ where: whereCondition });
+  }
+  
+    
 
     
 
@@ -55,7 +53,6 @@ export class TodoService {
 
   async updateStatus(id: number, status: 'In progress' | 'Completed', userId:number): Promise<Todo> {
     const todo = await this.findOne(id, userId);
-  
     todo.status = status;
     return this.todoRepository.save(todo);
   }

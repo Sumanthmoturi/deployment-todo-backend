@@ -33,10 +33,8 @@ export class AuthService {
 
       if (existingUser) {
         if (existingUser.email === email) {
-          const errorMessage = `Email already exists: ${email}`;
-          console.error(errorMessage);
-          this.myLoggerService.error(errorMessage, 'AuthService');
-          throw new ConflictException('Email already exists');
+          this.myLoggerService.error(`Email already exists: ${email}`, 'AuthService');
+        throw new ConflictException('Email already exists');
         }
 
         if (existingUser.mobile === mobile) {
@@ -96,12 +94,18 @@ export class AuthService {
         this.myLoggerService.error(errorMessage, 'AuthService');
         throw new BadRequestException('Incorrect password');
       }
-
+   
+      const token = this.jwtService.sign(
+        { userId: user.id },
+        {
+          secret: this.configService.get<string>('JWT_SECRET'),
+        }
+      );
       
       const successMessage = `User logged in successfully with mobile: ${mobile}`;
       this.myLoggerService.log(successMessage, 'AuthService');
 
-      return { message: 'Login successful', user: user };
+      return { message: 'Login successful', user, token };
     } catch (error) {
       console.error('Login Error:', error.message);
       throw error;

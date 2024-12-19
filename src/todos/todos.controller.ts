@@ -4,7 +4,7 @@ import { Todo } from './todo.entity';
 import { CreateTodoDto } from '../auth/dto/create-todo.dto';
 import { UpdateTodoStatusDto } from '../auth/dto/update-todo-status.dto';
 import { AuthGuard } from '../auth/jwt-auth.guard';
-@Controller('todo')
+@Controller('todos')
 export class TodoController {
   constructor(private todoService: TodoService) {}
   
@@ -19,6 +19,7 @@ export class TodoController {
   
   @UseGuards(AuthGuard)
   @Post()
+  @UsePipes(new ValidationPipe({ transform: true }))
   async create(@Request() req, @Body() createTodoDto: CreateTodoDto): Promise<Todo> {
     const userId = req.user.userId;
     return this.todoService.create(createTodoDto, userId);
