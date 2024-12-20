@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, ConflictException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -33,8 +33,10 @@ export class AuthService {
 
       if (existingUser) {
         if (existingUser.email === email) {
-          this.myLoggerService.error(`Email already exists: ${email}`, 'AuthService');
-        throw new ConflictException('Email already exists');
+          const errorMessage = `Email already exists: ${email}`;
+          console.error(errorMessage);
+          this.myLoggerService.error(errorMessage, 'AuthService');
+          throw new ConflictException('Email already exists');
         }
 
         if (existingUser.mobile === mobile) {
@@ -94,21 +96,30 @@ export class AuthService {
         this.myLoggerService.error(errorMessage, 'AuthService');
         throw new BadRequestException('Incorrect password');
       }
-   
-      const token = this.jwtService.sign(
-        { userId: user.id },
-        {
-          secret: this.configService.get<string>('JWT_SECRET'),
-        }
-      );
-      
-      const successMessage = `User logged in successfully with mobile: ${mobile}`;
-      this.myLoggerService.log(successMessage, 'AuthService');
 
-      return { message: 'Login successful', user, token };
-    } catch (error) {
-      console.error('Login Error:', error.message);
-      throw error;
-    }
+
+      
+      const payload = { id: user.id, mobile: user.mobile };
+    const token = this.jwtService.sign(payload); 
+
+    return {
+      message: 'Login successful',
+      token,
+      user,
+    };
+  } catch (error) {
+    throw error;
   }
 }
+
+
+async validateUserFromToken(token: string): Promise<User> {
+  try {
+    const decoded = this.jwtService.verify(token);
+    return decoded;
+  } catch (error) {
+    throw new UnauthorizedException('Invalid or expired token');
+  }
+}
+}
+

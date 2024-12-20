@@ -23,7 +23,6 @@ export class Todo {
   status: 'In progress' | 'Completed';
 
   @ManyToOne(() => User, (user) => user.todos)
-  @JoinColumn({ name: 'userId' })
   user: User;
 
 }

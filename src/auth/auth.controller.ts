@@ -33,42 +33,21 @@ export class AuthController {
   
   @Post('login')
   async login(@Body() body: LoginDto, @Res() res: Response) {
-    try {
-      const { mobile, password } = body;
-      if (!mobile || !password) {
-        throw new BadRequestException('Mobile and password are required');
-      }
-
-      const { message, user, token } = await this.authService.login(body);
-
-      res.cookie('access_token', token, {
-        httpOnly: true,  
-        secure: false,  
-        maxAge: 1000 * 60 * 60 * 24,
-        sameSite: 'none'
-      });
-      await this.myLoggerService.log(`User logged in successfully with mobile: ${mobile}`, 'AuthController');
-      return res.status(HttpStatus.OK).json({
-        message,
-        user,      
-      });
-    } catch (error) {
-      await this.myLoggerService.error('Login failed', error.stack);
-      return res.status(HttpStatus.UNAUTHORIZED).json({
-        message: error.message || 'Login failed',
-      });
+    const { mobile, password } = body;
+    if (!mobile || !password) {
+      throw new BadRequestException('Mobile and password are required');
     }
+
+    const { message, token, user } = await this.authService.login(body);
+    return res.status(HttpStatus.OK).json({
+      message,
+      token,
+      user,
+    });
   }
 
   @Post('logout')
   async logout(@Res() res: Response) {
-  
-    res.clearCookie('access_token', {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'none',
-    });
-
     return res.status(HttpStatus.OK).json({ message: 'Logout successful' });
   }
 }

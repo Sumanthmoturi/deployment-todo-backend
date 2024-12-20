@@ -1,53 +1,59 @@
-import { Controller, Get, Post, Body, Param, Delete,Request, Patch, Query, ParseIntPipe, BadRequestException, ValidationPipe, UsePipes, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Request, Patch, Query, ParseIntPipe, BadRequestException, ValidationPipe, UsePipes, UseGuards } from '@nestjs/common';
 import { TodoService } from './todos.service';
 import { Todo } from './todo.entity';
 import { CreateTodoDto } from '../auth/dto/create-todo.dto';
 import { UpdateTodoStatusDto } from '../auth/dto/update-todo-status.dto';
 import { AuthGuard } from '../auth/jwt-auth.guard';
-@Controller('todos')
-export class TodoController {
-  constructor(private todoService: TodoService) {}
-  
 
-  @UseGuards(AuthGuard)
-  @Get() 
-  async getTodosForUser(@Request() req): Promise<Todo[]> {
-    const userId = req.user.userId; 
-    return this.todoService.findAll(userId); 
+@Controller('todo')
+@UseGuards(AuthGuard)
+export class TodoController {
+  constructor(private readonly todoService: TodoService) {}
+
+  @Get()
+  async findAll(
+    @Request() req: any,
+    @Query('status') status?: 'In progress' | 'Completed'
+  ): Promise<Todo[]> {
+    const userId = req.user.id;
+    return this.todoService.findAll(userId, status);
   }
 
-  
-  @UseGuards(AuthGuard)
   @Post()
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Request() req, @Body() createTodoDto: CreateTodoDto): Promise<Todo> {
-    const userId = req.user.userId;
+  async create(
+    @Body() createTodoDto: CreateTodoDto,
+    @Request() req: any
+  ): Promise<Todo> {
+    const userId = req.user.id;
     return this.todoService.create(createTodoDto, userId);
   }
 
-  @UseGuards(AuthGuard)
   @Patch(':id/status')
   async updateStatus(
-    @Request() req,
-    @Param('id') id: number,
-    @Body() body: UpdateTodoStatusDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTodoStatusDto: UpdateTodoStatusDto,
+    @Request() req: any
   ): Promise<Todo> {
-    const userId = req.user.userId;
-    return this.todoService.updateStatus(id, body.status, userId);
+    const userId = req.user.id;
+    return this.todoService.updateStatus(id, updateTodoStatusDto.status, userId);
   }
-  
-  @UseGuards(AuthGuard)
+
   @Delete(':id')
-  async delete(@Request() req, @Param('id') id: number): Promise<{ message: string }> {
-    const userId = req.user.userId;
+  async delete(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: any
+  ): Promise<{ message: string }> {
+    const userId = req.user.id;
     await this.todoService.remove(id, userId);
     return { message: `Todo with ID ${id} has been deleted successfully.` };
   }
-  
-  @UseGuards(AuthGuard)
+
   @Get(':id')
-  async findOne(@Request() req, @Param('id') id: number): Promise<Todo> {
-    const userId = req.user.userId;
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: any
+  ): Promise<Todo> {
+    const userId = req.user.id;
     return this.todoService.findOne(id, userId);
   }
 }
