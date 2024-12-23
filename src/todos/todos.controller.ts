@@ -56,4 +56,15 @@ export class TodoController {
     const userId = req.user.id;
     return this.todoService.findOne(id, userId);
   }
+
+  @Patch(':id') 
+  async updateTodo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTodoDto: UpdateTodoStatusDto,
+    @Request() req: any
+  ): Promise<Todo> {
+    const userId = req.user.id;
+    return this.todoService.updateTodo(id, updateTodoDto, userId);
+  }
+
 }

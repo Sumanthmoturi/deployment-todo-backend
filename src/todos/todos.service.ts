@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Todo } from './todo.entity';
 import { CreateTodoDto } from '../auth/dto/create-todo.dto';
+import { UpdateTodoStatusDto } from 'src/auth/dto/update-todo-status.dto';
 
 @Injectable()
 export class TodoService {
@@ -51,6 +52,7 @@ export class TodoService {
     todo.status = status;
     return this.todoRepository.save(todo);
   }
+  
 
   async remove(id: number, userId: number): Promise<void> {
     const result = await this.todoRepository.delete({ id, user: { id: userId } });
@@ -60,5 +62,28 @@ export class TodoService {
     }
 
     this.logger.log(`Todo with ID ${id} has been deleted`);
+  }
+
+
+  async updateTodo(
+    id: number,
+    updateTodoDto: UpdateTodoStatusDto,
+    userId: number,
+  ): Promise<Todo> {
+    const todo = await this.findOne(id, userId);
+    if (updateTodoDto.name !== undefined) {
+      todo.name = updateTodoDto.name;
+    }
+    if (updateTodoDto.description !== undefined) {
+      todo.description = updateTodoDto.description;
+    }
+    if (updateTodoDto.time !== undefined) {
+      todo.time = updateTodoDto.time;
+    }
+    if (updateTodoDto.status !== undefined) {
+      todo.status = updateTodoDto.status;
+    }
+
+    return this.todoRepository.save(todo);
   }
 }
